@@ -2,9 +2,8 @@ from abc import ABC, abstractmethod, abstractproperty
 from torch.utils.data import DataLoader, Dataset, Subset
 import constants as constants
 import numpy as np
-from src.data import dataset as ds
+from src import dataset as ds
 from utils import common_utils as cu
-from src.data.dataset import VerDataset, ShapenetRecDataset
 
 
 def collate_fn(batch):
@@ -20,19 +19,16 @@ class DataHelper(ABC):
         val_ds=None,
         tst_ds=None,
         trntst_ds=None,
-        sim_ds=None,
         **kwargs,
     ) -> None:
         super().__init__()
         self.dataset_name = dataset_name
         self.dataset_type = dataset_type
-        assert self.dataset_type in [constants.REALDS, constants.SIMDS]
 
         self.trn_ds: ds.AbsDataset = trn_ds
         self.val_ds: ds.AbsDataset = val_ds
         self.tst_ds: ds.AbsDataset = tst_ds
         self.trntst_ds: ds.AbsDataset = trntst_ds
-        self.sim_ds: ds.AbsDataset = sim_ds
 
         self.batch_size = kwargs.get(constants.BATCH_SIZE, 8)
         self.num_workers = kwargs.get(constants.NUM_WORKERS, 4)
@@ -102,22 +98,6 @@ class DataHelper(ABC):
     def _tst_ds(self) -> ds.AbsDataset:
         return self.tst_ds
 
-    @property
-    def _sim_loader(self) -> DataLoader:
-        return self.sim_loader
-
-    @property
-    def _sim_labels(self):
-        """Retrurns the class labnel for all the sim imagesß"""
-        return self.sim_ds._image_labels
-
-    @property
-    def _sim_beta(self):
-        """
-        Returns the beta values for all the sim images
-        """
-        return self.sim_ds._image_betas
-
     def __set_loaders(self):
         """Assigns the Data loaders for the dataset"""
         if self.trn_ds is not None:
@@ -145,14 +125,6 @@ class DataHelper(ABC):
         if self.tst_ds is not None:
             self.tst_loader = DataLoader(
                 self.tst_ds,
-                batch_size=self.batch_size,
-                shuffle=False,
-                num_workers=self.num_workers,
-            )
-
-        if self.sim_ds is not None:
-            self.sim_loader = DataLoader(
-                self.sim_ds,
                 batch_size=self.batch_size,
                 shuffle=False,
                 num_workers=self.num_workers,
@@ -216,64 +188,15 @@ class DataHelper(ABC):
         self.__set_loaders()
 
 
-class ClsDataHelper(DataHelper):
-    def __init__(
-        self,
-        dataset_name,
-        dataset_type,
-        trn_ds=None,
-        val_ds=None,
-        tst_ds=None,
-        trntst_ds=None,
-        sim_ds: ds.ClsDataset = None,
-        **kwargs,
-    ) -> None:
-        super().__init__(
-            dataset_name,
-            dataset_type,
-            trn_ds=trn_ds,
-            val_ds=val_ds,
-            tst_ds=tst_ds,
-            trntst_ds=trntst_ds,
-            sim_ds=sim_ds,
-            **kwargs,
-        )
-
-
-class VerDataHelper(DataHelper):
-    def __init__(
-        self,
-        dataset_name,
-        dataset_type,
-        trn_ds: VerDataset = None,
-        val_ds: VerDataset = None,
-        tst_ds: VerDataset = None,
-        trntst_ds: VerDataset = None,
-        sim_ds: ds.VerDataset = None,
-        **kwargs,
-    ) -> None:
-        super().__init__(
-            dataset_name,
-            dataset_type,
-            trn_ds=trn_ds,
-            val_ds=val_ds,
-            tst_ds=tst_ds,
-            trntst_ds=trntst_ds,
-            sim_ds=sim_ds,
-            **kwargs,
-        )
-
-
 class RecDataHelper(DataHelper):
     def __init__(
         self,
         dataset_name,
         dataset_type,
-        trn_ds: ShapenetRecDataset = None,
-        val_ds: ShapenetRecDataset = None,
-        tst_ds: ShapenetRecDataset = None,
-        trntst_ds: ShapenetRecDataset = None,
-        sim_ds: ShapenetRecDataset = None,
+        trn_ds: Dataset = None,
+        val_ds: Dataset = None,
+        tst_ds: Dataset = None,
+        trntst_ds: Dataset = None,
         **kwargs,
     ) -> None:
         super().__init__(
@@ -283,6 +206,5 @@ class RecDataHelper(DataHelper):
             val_ds=val_ds,
             tst_ds=tst_ds,
             trntst_ds=trntst_ds,
-            sim_ds=sim_ds,
             **kwargs,
         )

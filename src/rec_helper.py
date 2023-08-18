@@ -1,17 +1,15 @@
 import torch
 import torch.nn as nn
 from src import models
-from src.data import data_helper as dh
+from src import data_helper as dh
 import constants
 from tqdm import tqdm
 from utils import common_utils as cu
 from torch.utils.data import DataLoader
 from utils import torch_data_utils as tdu
 import numpy as np
-from src.data import dataset as ds
+from src import dataset as ds
 from tqdm import tqdm
-from src import ver_helper as verh
-from src import cls_helper as clsh
 from utils import torch_data_utils as tdu
 
 
@@ -21,54 +19,22 @@ class RecHelper:
         rec_model: models.RecModel,
         rec_dh: dh.RecDataHelper,
         rec_model_name: str,
-        ver_dh: dh.VerDataHelper = None,
-        ver_helper: verh.VerHelper = None,
-        cls_dh: dh.ClsDataHelper = None,
-        cls_helper: clsh.ClsHelper = None,
         **kwargs,
     ):
         self.rec_model = rec_model
         self.rec_dh = rec_dh
         self.rec_model_name = rec_model_name
-        self.ver_dh: dh.VerDataHelper = ver_dh
-        self.ver_helper: verh.VerHelper = ver_helper
-        self.cls_dh: dh.ClsDataHelper = cls_dh
-        self.cls_helper: clsh.ClsHelper = cls_helper
 
         self.lr = kwargs.get(constants.LRN_RATE, 0.005)
         self.checkpoints = kwargs.get(constants.CHECKPOINTS, [])
-        self.margin = kwargs.get(constants.MARGIN, 0.2)
         self.ctr_lambda = kwargs.get(constants.CTR_LAMBDA, 0.1)
-        self.use_verifier = kwargs.get(constants.USE_VER, False)
         self.enforce_ctrloss = kwargs.get(constants.ENFORCE_CTRLOSS, False)
-
-        if self.use_verifier == True:
-            assert (
-                self.ver_dh is not None and self.ver_helper is not None
-            ), "If u want to use the the verifier in ctr training, pass both the ver dh and ver helper."
-
-        assert not (
-            self.use_verifier and not self.enforce_ctrloss
-        ), "When we use verifier, it makes sense only when ctr loss is imposed."
-
-        if "ctr" not in self.rec_model_name and self.enforce_ctrloss == True:
-            self.rec_model_name = f"{self.rec_model_name}-ctr={self.ctr_lambda}"
-        if "ver" not in self.rec_model_name and self.use_verifier == True:
-            self.rec_model_name = f"{self.rec_model_name}-ver"
 
         constants.logger.info(f"rec_model_name: {self.rec_model_name}")
         print(f"rec_model_name: {self.rec_model_name}")
 
     def __str__(self) -> str:
-        name = f"{constants.REC}-{self.rec_model_name}"
-        if self.enforce_ctrloss:
-            name = f"{name}-ctr={self.ctr_lambda}"
-            name = f"{name}-margin={self.margin}"
-            if self.use_verifier:
-                name = f"{name}-ver"
-            else:
-                name = f"{name}-no_ver"
-        return name
+        return f"{self.rec_model_name}"
 
     @property
     def _xent_loss(self):
@@ -121,17 +87,6 @@ class RecHelper:
         )
         lr_scheduler = torch.optim.lr_scheduler.StepLR(
             optimizer, step_size=3, gamma=0.1
-        )
-
-        trn_ds: ds.VerDataset = self.rec_dh._trn_ds
-        sim_ds: ds.VerDataset = self.rec_dh._sim_ds
-
-        collect_rho = (
-            lambda dset, z, b: torch.FloatTensor(
-                [dset.z_beta_rho(zz.item(), bb.tolist()) for zz, bb in zip(z, b)]
-            )
-            .view(-1, 1)
-            .to(cu.get_device(), dtype=torch.float64)
         )
 
         for epoch in range(epochs):

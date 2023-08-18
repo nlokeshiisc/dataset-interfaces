@@ -58,27 +58,6 @@ def get_log_dir(config: dict = None, sw=False) -> Path:
     dataset_name = config[constants.DATASET_SPECS][constants.DATASET_NAME]
     log_dir = log_dir / dataset_name
 
-    trn_args: dict = config[constants.TRAIN_ARGS]
-    expt = [k for k, v in trn_args.items() if v]  # Get the experiment name
-    assert len(expt) <= 1, f"More than one experiment name found: {expt}"
-    if len(expt) == 0:
-        expt = constants.MISC
-    else:
-        expt = expt[0]
-    log_dir = log_dir / expt
-
-    if expt == constants.CLS:
-        # Cls trains on the real dataset
-        real_args = config[constants.DATASET_SPECS][constants.REALARGS]
-        ds_config = constants.realargs_to_str_fn(real_args)
-        log_dir = log_dir / ds_config
-        collapse_labels = config[constants.DATASET_SPECS][constants.COLLAPSE_LABELS]
-        if collapse_labels:
-            collapse_dict = config[constants.DATASET_SPECS][constants.COLLAPSE_DICT]
-            log_dir = log_dir / constants.dict_to_str(collapse_dict)
-
-    elif dataset_name == constants.SIMDS:
-        raise NotImplementedError("Do something here")
     return log_dir
 
 
@@ -150,94 +129,6 @@ def parse_args(args, unknown_args) -> dict:
         dict: _description_
     """
     config = __load_config_file(args, unknown_args)
-
-    sim_args: dict = config[constants.DATASET_SPECS][constants.SIMARGS]
-    random_sim = sim_args.get(constants.RANDOM_SIM, False)
-    real_args = config[constants.DATASET_SPECS][constants.REALARGS]
-
-    config[
-        constants.EXPTNAME
-    ] = f"{config[constants.EXPTNAME]}-{constants.realargs_to_str_fn(real_args)}"
-
-    # Apply changes if we have random simulator
-    if random_sim == True:
-        config[constants.EXPTNAME] = config[constants.EXPTNAME] + "-sim=rnd"
-        print(f"Changed the exptname to {config[constants.EXPTNAME]}")
-
-        ver_model_name = config[constants.VERIFIER_SPECS][constants.MODEL_NAME]
-        ver_model_name = f"{ver_model_name}-sim=rnd"
-        config[constants.VERIFIER_SPECS][constants.MODEL_NAME] = ver_model_name
-        print(
-            f"changed ver model name to {config[constants.VERIFIER_SPECS][constants.MODEL_NAME]}"
-        )
-
-        rec_model_name = config[constants.REC_SPECS][constants.MODEL_NAME]
-        rec_model_name = f"{rec_model_name}-sim=rnd"
-        config[constants.REC_SPECS][constants.MODEL_NAME] = rec_model_name
-        print(
-            f"changed the rec model name to {config[constants.REC_SPECS][constants.MODEL_NAME]}"
-        )
-
-    ver_use_imgemb = config[constants.VERIFIER_SPECS][constants.KWARGS][
-        constants.USE_IMGEMB
-    ]
-    ver_model_name = config[constants.VERIFIER_SPECS][constants.MODEL_NAME]
-    config[constants.VERIFIER_SPECS][
-        constants.MODEL_NAME
-    ] = f"{ver_model_name}-imgemb={ver_use_imgemb}"
-    print(
-        f"changed ver model name to {config[constants.VERIFIER_SPECS][constants.MODEL_NAME]}"
-    )
-
-    # Apply changes according to ver output
-    ver_output = config[constants.VERIFIER_SPECS][constants.KWARGS][
-        constants.VER_OUTPUT
-    ]
-    tbl_lookup_ver = config[constants.VERIFIER_SPECS][constants.KWARGS][
-        constants.TABLE_LOOKUP
-    ]
-    if random_sim == False:
-        ver_model_name = config[constants.VERIFIER_SPECS][constants.MODEL_NAME]
-        ver_model_name = (
-            f"{ver_model_name}-ver=accrej"
-            if ver_output == constants.ACCREJ
-            else f"{ver_model_name}-ver=diffdiff"
-        )
-        if tbl_lookup_ver == True:
-            ver_model_name = f"{ver_model_name}-tbl_lkp"
-        config[constants.VERIFIER_SPECS][constants.MODEL_NAME] = ver_model_name
-        print(
-            f"changed ver model name to {config[constants.VERIFIER_SPECS][constants.MODEL_NAME]}"
-        )
-
-    rec_use_ver = config[constants.REC_SPECS][constants.KWARGS][constants.USE_VER]
-    if rec_use_ver == True:
-        rec_model_name = config[constants.REC_SPECS][constants.MODEL_NAME]
-        rec_model_name = (
-            f"{rec_model_name}-ver=accrej"
-            if ver_output == constants.ACCREJ
-            else f"{rec_model_name}-ver=diffdiff"
-        )
-        if tbl_lookup_ver == True:
-            rec_model_name = f"{rec_model_name}-tbl_lkp"
-        config[constants.REC_SPECS][constants.MODEL_NAME] = rec_model_name
-        print(
-            f"changed the rec model name to {config[constants.REC_SPECS][constants.MODEL_NAME]}"
-        )
-
-        rec_trn = config[constants.TRAIN_ARGS][constants.REC]
-        if not (rec_trn and not rec_use_ver):
-            config[constants.EXPTNAME] = (
-                f"{config[constants.EXPTNAME]}-ver=accrej"
-                if ver_output == constants.ACCREJ
-                else f"{config[constants.EXPTNAME]}-ver=diffdiff"
-            )
-            if tbl_lookup_ver == True:
-                config[constants.EXPTNAME] = f"{config[constants.EXPTNAME]}-tbl_lkp"
-            print(f"Changed the exptname to {config[constants.EXPTNAME]}")
-
-    # Also push the sim_args to the cls_specs. cls_helper must be aware of the simulator
-    config[constants.CLS_SPECS][constants.KWARGS][constants.SIMARGS] = sim_args
 
     dict_print(config)
 

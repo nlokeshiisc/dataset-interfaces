@@ -7,6 +7,7 @@ from collections import defaultdict
 from pprint import pprint
 from tqdm import tqdm
 import pandas as pd
+from utils import torch_utils as tu
 
 
 def get_model(model_name, pretrn=True):
@@ -28,72 +29,11 @@ def get_ds_dl(dataset_name):
     return ds, dl
 
 
-class AccuracyMeter:
-    def __init__(self):
-        self.correct = 0
-        self.total = 0
-
-        self.cls_acc = defaultdict(int)
-        self.cls_total = defaultdict(int)
-        self.confusion_preds = defaultdict(int)
-
-    def reset(self):
-        self.correct = 0
-        self.total = 0
-        self.cls_acc = defaultdict(int)
-        self.cls_total = defaultdict(int)
-        self.confusion_preds = defaultdict(lambda: defaultdict(int))
-
-    def update(self, y_preds, y):
-        pred_labels = y_preds.argmax(dim=1)
-        correct = pred_labels == y
-        self.correct += correct.sum().item()
-        self.total += len(y)
-
-        # update classwise accuracy
-        for i in range(len(y)):
-            cls = y[i].item()
-            self.cls_acc[cls] += correct[i].item()
-            self.cls_total[cls] += 1
-
-        # update confusion matrix
-        for i in range(len(y)):
-            pred = pred_labels[i].item()
-            cls = y[i].item()
-            self.confusion_preds[cls][pred] += 1
-
-    def accuracy(self, verbose=False):
-        acc = self.correct / self.total
-        if verbose:
-            print(f"Accuracy: {acc}")
-        return acc
-
-    def classwise_accuracy(self, verbose=False):
-        cls_acc = {}
-        for cls in self.cls_acc:
-            cls_acc[cls] = self.cls_acc[cls] / self.cls_total[cls]
-        if verbose:
-            pprint(cls_acc)
-        return cls_acc
-
-    def confusion_matrix(self, verbose=False):
-        confusion = {}
-        for y in self.confusion_preds:
-            confusion[y] = {}
-            total = self.cls_total[y]
-
-            for pred in self.confusion_preds[y]:
-                confusion[y][pred] = self.confusion_preds[y][pred] / total
-        if verbose:
-            pprint(confusion)
-        return confusion
-
-
 @torch.inference_mode()
 def evaluate_model(
     model: torch.nn.Module, loader: DataLoader, device: str, cache=False
 ):
-    acc_meter = AccuracyMeter()
+    acc_meter = tu.AccuracyMeter()
     acc_meter.reset()
     model = model.to(device)
     model.eval()
@@ -129,11 +69,13 @@ def df_to_acc(dataset_name):
     except:
         print("Call evaluate_model with cache=True first")
         return
-    acc_meter = AccuracyMeter()
+    acc_meter = tu.AccuracyMeter()
     acc_meter.reset()
     true_labels = df["true"].values
     pred_labels = df["pred"].values
-    acc_meter.update(y_preds=torch.Tensor(pred_labels), y=torch.Tensor(true_labels))
-    print(f"Accuracy: {acc_meter.accuracy()}")
-    print(f"Classwise accuracy: {acc_meter.classwise_accuracy()}")
+    acc_meter.update(
+        y_preds=torch.Tensor(pred_labels),
+        y=torch.Tensor(true_labels),
+        y_preds_labels=True,
+    )
     return acc_meter
