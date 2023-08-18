@@ -20,7 +20,7 @@ def get_ds_dl(dataset_name):
     ds = utils.ImageNet_Star_Dataset(
         path=constants.imagenet_star_dir,
         shift=dataset_name,
-        mask_path=constants.imagenet_star_dir / "masks.npy",
+        # mask_path=constants.imagenet_star_dir / "masks.npy",
         transform=constants.RESNET_TRANSFORMS[constants.TST],
     )
     # Create dataloader
@@ -90,7 +90,9 @@ class AccuracyMeter:
 
 
 @torch.inference_mode()
-def evaluate_model(model: torch.nn.Module, loader: DataLoader, device: str):
+def evaluate_model(
+    model: torch.nn.Module, loader: DataLoader, device: str, cache=False
+):
     acc_meter = AccuracyMeter()
     acc_meter.reset()
     model = model.to(device)
@@ -110,13 +112,28 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, device: str):
             pbar.set_postfix({"Accuracy": acc_meter.accuracy()})
             pbar.update(1)
 
-        shift = loader.dataset.shift
-        true_labels = torch.cat(true_labels).numpy()
-        pred_labels = torch.cat(pred_labels).numpy()
-        cnf = torch.cat(cnf).numpy()
-        df = pd.DataFrame({"true": true_labels, "pred": pred_labels, "cnf": cnf})
-        df.to_csv(constants.PROJ_DIR / f"{shift}_preds.csv", index=False)
+        if cache == True:
+            shift = loader.dataset.shift
+            true_labels = torch.cat(true_labels).numpy()
+            pred_labels = torch.cat(pred_labels).numpy()
+            cnf = torch.cat(cnf).numpy()
+            df = pd.DataFrame({"true": true_labels, "pred": pred_labels, "cnf": cnf})
+            df.to_csv(constants.PROJ_DIR / "cache" / f"{shift}_preds.csv", index=False)
 
-        print(f"Accuracy: {acc_meter.accuracy()}")
-        print(f"Classwise accuracy: {acc_meter.classwise_accuracy()}")
-        print(f"Confusion matrix: {acc_meter.confusion_matrix()}")
+        return acc_meter
+
+
+def df_to_acc(dataset_name):
+    try:
+        df = pd.read_csv(constants.PROJ_DIR / "cache" / f"{dataset_name}_preds.csv")
+    except:
+        print("Call evaluate_model with cache=True first")
+        return
+    acc_meter = AccuracyMeter()
+    acc_meter.reset()
+    true_labels = df["true"].values
+    pred_labels = df["pred"].values
+    acc_meter.update(y_preds=torch.Tensor(pred_labels), y=torch.Tensor(true_labels))
+    print(f"Accuracy: {acc_meter.accuracy()}")
+    print(f"Classwise accuracy: {acc_meter.classwise_accuracy()}")
+    return acc_meter

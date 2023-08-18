@@ -74,7 +74,6 @@ class SplitEmbedding(nn.Module):
 
 class ImageNet_Star_Dataset(ImageFolder):
     def __init__(self, path, shift="base", mask_path=None, transform=None):
-
         super().__init__(os.path.join(path, shift), transform=transform)
 
         # In this repo we also provide masks for each distribution shift indicating which images
@@ -88,7 +87,6 @@ class ImageNet_Star_Dataset(ImageFolder):
         self.shift = shift
 
     def __getitem__(self, index):
-
         if self.mask is not None:
             index = self.mask_indices[index]
 
@@ -123,7 +121,6 @@ def image_grid(imgs, rows, cols):
 def visualize_samples(
     images, names, desc, title=None, figsize=None, fontsize=14, dpi=100
 ):
-
     N = len(names)
     M = len(desc)
 
@@ -134,13 +131,11 @@ def visualize_samples(
     subfigs = fig.subfigures(nrows=N, ncols=1)
 
     for i in range(N):
-
         subfig = subfigs[i]
 
         ax = subfig.subplots(nrows=1, ncols=M)
 
         for j in range(M):
-
             ax[j].imshow(images[i][j])
             ax[j].set_xticks([])
             plt.setp(ax[j].spines.values(), visible=False)
@@ -152,9 +147,7 @@ def visualize_samples(
         ax[0].set_ylabel(names[i], fontsize=fontsize)
 
         if i == 0:
-
             for j in range(M):
-
                 ax[j].set_title(desc[j], fontsize=fontsize)
 
         else:
