@@ -1,5 +1,14 @@
 __pycache__/
 */.ipynb_checkpoints/
+<<<<<<< Updated upstream
 data/imagenet_star/*
 results/logs/
 results/tb/
+=======
+tokens.zip
+.gitignore
+tokens/
+*.bin
+*.jpg
+*.zip
+>>>>>>> Stashed changes
