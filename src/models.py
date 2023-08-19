@@ -180,7 +180,7 @@ class RecModel(nn.Module, ABC):
     @property
     def _dir_path(self) -> Path:
         # TODO Change this to a better location
-        return Path("/raid/infolab/nlokesh/dataset-interfaces/results/models")
+        return constants.PROJ_DIR / "results" / "models" / self._model_type
 
     def save_model(self, rec_model_name: str):
         """Saves the model inside the result folder

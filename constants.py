@@ -11,6 +11,7 @@ IMSTAR = "imagenet_star"
 
 # %% Imagenet constants
 imagenet_star_dir: Path = PROJ_DIR / "data/imagenet_star"
+MODELDIR = PROJ_DIR / "results/models"
 
 BASE = "base"
 DUSK = "at_dusk"
@@ -63,9 +64,6 @@ shift_idx: dict = {
     SNOW: 7,
     STUDIO: 8,
 }
-
-SHIFT = "shift"
-
 
 RANDOM_SIM = "random_simulator"
 
@@ -133,14 +131,12 @@ REALARGS = "real_args"
 SIMARGS = "sim_args"
 REAL_PREDS = "real_preds"
 
-LABELS = "labels"
 IMAGE_ID = "image_id"
 LOAD_MODEL = "load_model"
 
 INPUT = "input"
 PREDZ = "pred_z"
 PREDBETA = "pred_beta"
-PREDY = "pred_y"
 GOLDZ = "gold_z"
 GOLDBETA = "gold_beta"
 GOLDY = "gold_y"
@@ -170,7 +166,6 @@ DELTA = "delta"
 IMGEMB = "imgemb"
 BETA = "beta"
 BETAID = "beta_id"
-RHO = "rho"
 GRP_RHO = "grp_rho"
 FINE_GRP_RHO = "fine_grp_rho"
 FINE_LABELS = "fine_labels"
@@ -191,3 +186,12 @@ DIFF_DIFF_THRES = "diff_diff_threshold"
 TABLE_LOOKUP = "table_lookup"
 
 LOAD_CLS_TRN = "load_cls_trn"
+
+IMGFILE = "img_file"
+CNF = "cnf"
+LOSS = "loss"
+TRUEY = "true_y"
+PREDY = "pred_y"
+SHIFT = "shift"
+RHO = "rho"
+LABEL = "label"

@@ -21,9 +21,9 @@ class AbsDataset(Dataset, ABC):
         self.dataset_split = dataset_split
 
         self.df = df
-        self.image_files = self.df["image_files"].values
-        self.labels = self.df["labels"].values
-        self.src_shifts = self.df["shifts"].values
+        self.image_files = self.df[constants.IMGFILE].values
+        self.labels = self.df[constants.LABEL].values
+        self.src_shifts = self.df[constants.SHIFT].values
 
         self.transform = transform
         self.classes = np.unique(self.labels)
@@ -117,9 +117,9 @@ class DFRho(Dataset):
 
     def __init__(self, df: pd.DataFrame) -> None:
         self.df: pd.DataFrame = df
-        self.image_files = self.df["image_files"].values
-        self.true_y = self.df["true_y"].values
-        self.pred_y = self.df["pred_y"].values
+        self.image_files = self.df[constants.IMGFILE].values
+        self.true_y = self.df[constants.TRUEY].values
+        self.pred_y = self.df[constants.PREDY].values
         self.cnf = self.df["cnf"].values
         self.loss = self.df["loss"].values
 
@@ -128,13 +128,13 @@ class DFRho(Dataset):
 
     def __getitem__(self, idx):
         return {
-            "image_files": self.image_files[idx],
-            "true_y": self.true_y[idx],
-            "pred_y": self.pred_y[idx],
+            constants.IMGFILE: self.image_files[idx],
+            constants.TRUEY: self.true_y[idx],
+            constants.PREDY: self.pred_y[idx],
             "cnf": self.cnf[idx],
             "loss": self.loss[idx],
         }
 
-    def get_item(self, image_file):
+    def get_item(self, image_file) -> dict:
         idx = np.where(self.image_files == image_file)[0][0]
         return self.__getitem__(idx)

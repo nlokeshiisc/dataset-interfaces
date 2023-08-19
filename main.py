@@ -9,10 +9,10 @@ from utils import common_utils as cu
 from src import data_helper as dh
 import pandas as pd
 from src import rec_helper as rech
-from utils import torch_utils as tu
 from src import models
 import numpy as np
 from src import dataset as ds
+from dataset_interfaces import utils as dfi_utils
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 import argparse
@@ -50,39 +50,32 @@ if trn_args[constants.COMPUTE_RHO] == True:
         imstar_ds, dl = mh.get_ds_dl(dataset_name=shift)
         mh.evaluate_model(model=cls_model, loader=dl, cache=True)
 
-# %% Check Accuracies
-if False:
-    # This is simply to sanity check the cached dataframes
-    shift_ds, acc_meters = {}, {}
-    for shift in shifts:
-        imstar_ds, dl = mh.get_ds_dl(dataset_name=shift)
-        shift_ds[shift] = imstar_ds
-        acc_meter = mh.df_to_acc(dataset_name=shift)
-        acc_meters[shift] = acc_meter
-
-        print(f"Dataset: {shift}, accuracy: {acc_meters[shift].accuracy()}")
-    pass
 
 # %% Rec model
 
 if trn_args[constants.REC] == True:
-    shift_ds = None
+    shifts_ds: dict = mh.get_rec_datasets(shifts=shifts)
 
     rec_model: models.TarnetRecModel = models.TarnetRecModel(
-        datasets=shift_ds, **rec_args
+        datasets=shifts_ds, **rec_args
     )
 
     df = {
-        "image_files": [],
-        "labels": [],
-        "shifts": [],
-        "rho": [],
+        constants.IMGFILE: [],
+        constants.LABEL: [],
+        constants.SHIFT: [],
+        constants.RHO: [],
     }
 
     for cls, cls_name in enumerate(sel_classes):
         for idx in range(10, 50):
             sampled_shifts = np.random.choice(shifts, 2)
             for sampled_shift in sampled_shifts:
+                shift_ds: dfi_utils.ImageNet_Star_Dataset = sampled_shifts[
+                    sampled_shift
+                ]["ds"]
+                shift_rho: ds.DFRho = sampled_shifts[sampled_shift][constants.RHO]
+
                 img_file: Path = (
                     constants.imagenet_star_dir
                     / sampled_shift
@@ -90,10 +83,12 @@ if trn_args[constants.REC] == True:
                     / f"{idx}.jpg"
                 )
                 assert img_file.exists()
-                df["image_files"].append(img_file)
-                df["labels"].append(cls)
-                df["shifts"].append(sampled_shift)
-                df["rho"].append(shift_ds[f"{sampled_shift}_rho"][idx])
+                df[constants.IMGFILE].append(img_file)
+                df[constants.LABEL].append(cls)
+                df[constants.SHIFT].append(sampled_shift)
+                df[constants.RHO].append(
+                    shift_rho.get_item(image_file=img_file)[constants.RHO]
+                )
 
     df = pd.DataFrame(df)
 
@@ -112,3 +107,6 @@ if trn_args[constants.REC] == True:
         rec_dh=rec_dh,
         rec_model_name=rec_model_name,
     )
+
+    rec_helper.train_rec(**rec_args)
+    rec_helper.save_model()

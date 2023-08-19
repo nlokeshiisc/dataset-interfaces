@@ -10,6 +10,7 @@ import pandas as pd
 from utils import torch_utils as tu
 from utils import common_utils as cu
 import itertools
+from src import dataset as ds
 
 
 def get_model(model_name, pretrn=True):
@@ -18,7 +19,7 @@ def get_model(model_name, pretrn=True):
     return model
 
 
-def get_ds_dl(dataset_name):
+def get_ds_dl(dataset_name, loader=True):
     print(f"Loading dataset: {dataset_name}")
     ds = utils.ImageNet_Star_Dataset(
         path=constants.imagenet_star_dir,
@@ -26,6 +27,9 @@ def get_ds_dl(dataset_name):
         # mask_path=constants.imagenet_star_dir / "masks.npy",
         transform=constants.RESNET_TRANSFORMS[constants.TST],
     )
+    if loader == False:
+        return ds
+
     # Create dataloader
     dl = DataLoader(ds, batch_size=32, shuffle=False, num_workers=4)
     return ds, dl
@@ -76,9 +80,9 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, cache=False):
 
             df = pd.DataFrame(
                 {
-                    "image_files": image_files,
-                    "true_y": true_labels,
-                    "pred_y": pred_labels,
+                    constants.IMGFILE: image_files,
+                    constants.TRUEY: true_labels,
+                    constants.PREDY: pred_labels,
                     "cnf": cnf,
                     "loss": losses,
                 }
@@ -109,3 +113,43 @@ def df_to_acc(dataset_name):
         y_preds_labels=True,
     )
     return acc_meter
+
+
+def get_rec_datasets(shifts):
+    """Loads the datasets for the shifts and classes specified
+
+    Args:
+        shifts (_type_): _description_
+        sel_classes (_type_): _description_
+    """
+    shifts_ds: dict = {}
+    for shift in shifts:
+        imstar_ds = get_ds_dl(shift)
+        try:
+            shift_df = pd.read_csv(
+                constants.imagenet_star_dir / "cache" / f"{shift}_preds.csv"
+            )
+        except:
+            print("Call evaluate_model with cache=True first")
+            return
+        shift_rho = ds.DFRho(df=shift_df)
+
+        shifts_ds[shift] = {}
+        shifts_ds[shift]["ds"] = imstar_ds
+        shifts_ds[shift][constants.RHO] = shift_rho
+
+    return shifts_ds
+
+
+# %% Check Accuracies
+if False:
+    # This is simply to sanity check the cached dataframes
+    shift_ds, acc_meters = {}, {}
+    for shift in shifts:
+        imstar_ds, dl = mh.get_ds_dl(dataset_name=shift)
+        shift_ds[shift] = imstar_ds
+        acc_meter = mh.df_to_acc(dataset_name=shift)
+        acc_meters[shift] = acc_meter
+
+        print(f"Dataset: {shift}, accuracy: {acc_meters[shift].accuracy()}")
+    pass

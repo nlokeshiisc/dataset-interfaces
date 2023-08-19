@@ -33,8 +33,8 @@ config = {
             constants.EMBDIM: 64,
         },
     },
-    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: True, constants.REC: False},
+    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: False, constants.REC: True},
     constants.SEED: 0,
     constants.GPUID: 5,
-    constants.EXPTNAME: "factual_subsample",
+    constants.EXPTNAME: "factual_x_beta",
 }
