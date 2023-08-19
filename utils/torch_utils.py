@@ -1,5 +1,6 @@
 from collections import defaultdict
 from pprint import pprint
+import pandas as pd
 
 
 class AccuracyMeter:
@@ -81,3 +82,8 @@ class AccuracyMeter:
         if verbose:
             pprint(confusion)
         return confusion
+
+
+class DF_Rho:
+    def __init__(self, df: pd.DataFrame) -> None:
+        self.df = df

@@ -10,9 +10,8 @@ PROJ_DIR = Path(".").absolute()
 IMSTAR = "imagenet_star"
 
 # %% Imagenet constants
-imagenet_star_dir: Path = Path(
-    "/raid/infolab/nlokesh/dataset-interfaces/data/imagenet_star"
-)
+imagenet_star_dir: Path = PROJ_DIR / "data/imagenet_star"
+
 BASE = "base"
 DUSK = "at_dusk"
 NIGHT = "at_night"
@@ -158,6 +157,7 @@ TARNET_RECOURSE = "tarnet_rec"
 EMBEDDING_RECOURSE = "emb_rec"
 ETA_RECOURSE = "eta_rec"
 TRAIN_ARGS = "train_args"
+COMPUTE_RHO = "compute_rho"
 CLS = "cls"
 ZBETA = "zbeta"
 REC = "rec"

@@ -1,17 +1,31 @@
 import os
-import constants as constants
 
-for shift in [
+os.environ["MKL_SERVICE_FORCE_INTEL"] = "1"
+import constants as constants
+import numpy as np
+from joblib import Parallel, delayed
+
+GPU = 3
+
+shifts = [
     # constants.BASE,
     # constants.DUSK,
-    constants.FOREST,
+    # constants.FOREST,
     # constants.FOG,
-    constants.NIGHT,
+    # constants.NIGHT,
     # constants.SNOW,
-    constants.RAIN,
+    # constants.RAIN,
     constants.STUDIO,
-    # constants.SUNLIGHT,
-]:
-    cmd = f"python main.py --shift {shift} --gpu 5 >> out.txt"
+    constants.SUNLIGHT,
+]
+
+
+def run_shift(shift):
+    cmd = f"python main.py \
+        {constants.GENERAL_SPECS}.{constants.SHIFT}:[{shift}] \
+        {constants.GPUID}:{GPU}"
     print(cmd)
     os.system(cmd)
+
+
+Parallel(n_jobs=4)(delayed(run_shift)(shift) for shift in shifts)

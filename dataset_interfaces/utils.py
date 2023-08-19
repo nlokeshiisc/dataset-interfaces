@@ -73,7 +73,7 @@ class SplitEmbedding(nn.Module):
 
 
 class ImageNet_Star_Dataset(ImageFolder):
-    def __init__(self, path, shift="base", mask_path=None, transform=None):
+    def __init__(self, path, shift, mask_path=None, transform=None):
         super().__init__(os.path.join(path, shift), transform=transform)
 
         # In this repo we also provide masks for each distribution shift indicating which images
@@ -97,7 +97,7 @@ class ImageNet_Star_Dataset(ImageFolder):
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return sample, target
+        return index, path, sample, target
 
     def __len__(self):
         if self.mask is not None:
