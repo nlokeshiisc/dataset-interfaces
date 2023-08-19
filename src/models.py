@@ -349,7 +349,7 @@ class TarnetRecModel(RecModel):
         shift_emb = self.shift_emb(src_shift_ids)
         emb = torch.cat([img_emb, shift_emb], dim=1)
 
-        out = torch.zeros(len(emb)).to(cu.get_device(), dtype=torch.float64)
+        out = torch.zeros(len(emb)).to(cu.get_device(), dtype=torch.float16)
         for _ in range(self.shifts):
             idxs = torch.where(rec_shift_ids == _)[0]
 
@@ -389,7 +389,7 @@ class TarnetRecModel(RecModel):
         emb = torch.cat([img_emb, shift_emb], dim=1)
 
         out = torch.zeros(len(emb), self.num_shifts).to(
-            cu.get_device(), dtype=torch.float64
+            cu.get_device(), dtype=torch.float16
         )
 
         for idx, shift in enumerate(self.shifts):

@@ -79,7 +79,7 @@ class RecHelper:
 
         self._model.train()
 
-        self._model.to(cu.get_device(), dtype=torch.float64)
+        self._model.to(cu.get_device(), dtype=torch.float16)
         params = [p for p in self._model.parameters() if p.requires_grad]
         optimizer = torch.optim.AdamW(
             params,
@@ -95,127 +95,17 @@ class RecHelper:
             log_ver_pc = []
 
             pbar = tqdm(trn_loader, total=len(trn_loader))
-            for idxs, img_dict in pbar:
-                z = img_dict["z"].to(cu.get_device())
-                beta = img_dict[constants.BETA].to(cu.get_device())
-                fct_betaids = img_dict[constants.BETAID].to(cu.get_device())
-
-                rho = img_dict[constants.RHO].to(cu.get_device(), dtype=torch.float64)
-                img_emb = img_dict[constants.IMGEMB].to(cu.get_device())
+            for idxs, imgs, ys, shifts, rhos in pbar:
+                imgs = imgs.to(cu.get_device(), dtype=torch.float16)
+                ys = ys.to(cu.get_device(), dtype=torch.long)
+                rhos = rhos.to(cu.get_device(), dtype=torch.float16)
 
                 if len(idxs) == 1:
                     tdu.batch_norm_off(self._model)
 
-                fct_rho_preds = self._model.forward(
-                    z=z, beta=beta, phi_x=img_emb, rec_beta_ids=fct_betaids
-                )
-
-                fct_loss = self._mse_loss(fct_rho_preds.squeeze(), rho.squeeze())
-
+                rho_preds = self._model.forward(img=imgs, src_shift=shifts)
+                fct_loss = self._mse_loss(rho_preds.squeeze(), rhos.squeeze())
                 loss = fct_loss
-
-                if self.enforce_ctrloss == True:
-                    rec_beta = torch.cat([trn_ds.sample_beta() for _ in z]).to(
-                        cu.get_device()
-                    )
-
-                    if self.rec_dh._dataset_name == constants.SHAPENET:
-                        rec_beta_ids = [
-                            constants.shapenet_beta_to_idx_dict[
-                                constants.betatostr_fn(rb.cpu().tolist())
-                            ]
-                            for rb in rec_beta
-                        ]
-                    elif self.rec_dh._dataset_name == constants.MEDICAL:
-                        rec_beta_ids = [
-                            constants.medical_beta_to_idx_dict[
-                                constants.betatostr_fn(rb.cpu().tolist())
-                            ]
-                            for rb in rec_beta
-                        ]
-                    else:
-                        raise ValueError(
-                            f"Unknown dataset name {self.rec_dh._dataset_name}"
-                        )
-                    rec_beta_ids = (
-                        torch.LongTensor(rec_beta_ids).view(-1, 1).to(cu.get_device())
-                    )
-
-                    sim_rho = collect_rho(sim_ds, z, beta)
-                    sim_rho_rec = collect_rho(sim_ds, z, rec_beta)
-
-                    rec_labels = torch.zeros(len(sim_rho), 1).to(cu.get_device())
-                    rec_better = (sim_rho_rec > (sim_rho + self.margin)).to(
-                        cu.get_device()
-                    )
-                    rec_worse = (sim_rho_rec < (sim_rho - self.margin)).to(
-                        cu.get_device()
-                    )
-                    rec_labels[rec_better] = 1
-                    rec_labels[rec_worse] = -1
-
-                    rank_loss_idxs = torch.where(rec_labels != 0)[0]
-                    mse_loss_idxs = torch.where(rec_labels == 0)[0]
-
-                    """
-                    Notes of marginRankingloss:
-                    If y=1, then it assumed the first input should be ranked higher 
-                    (have a larger value) than the second input, and vice-versa for y = −1
-                    """
-                    rec_rho_preds = self._model.forward(
-                        z=z, beta=beta, phi_x=img_emb, rec_beta_ids=rec_beta_ids
-                    )
-
-                    ctr_loss = torch.zeros(len(rec_rho_preds)).to(
-                        cu.get_device(), dtype=torch.float64
-                    )
-                    if len(rank_loss_idxs) > 0:
-                        ctr_rank_loss = self._margin_loss_perex(
-                            rec_rho_preds[rank_loss_idxs].squeeze(),
-                            fct_rho_preds[rank_loss_idxs].squeeze(),
-                            rec_labels[rank_loss_idxs].squeeze(),
-                        )
-                        ctr_loss[rank_loss_idxs] = ctr_rank_loss
-
-                    if len(mse_loss_idxs) > 0:
-                        ctr_mse_loss = self._mse_loss(
-                            rec_rho_preds[mse_loss_idxs].squeeze(),
-                            fct_rho_preds[mse_loss_idxs].squeeze(),
-                        )
-                        ctr_loss[mse_loss_idxs] = ctr_mse_loss
-
-                    if self.use_verifier == False:
-                        ctr_loss = torch.mean(ctr_loss)
-                    else:
-                        ver_labels = self.ver_helper.predict_labels_batch(
-                            z=z, beta=beta, zp=z, betap=rec_beta, phi_x=img_emb
-                        )
-                        if self.ver_helper._ver_output == constants.ACCREJ:
-                            ctr_ver = (ver_labels == 1).to(cu.get_device())
-                        elif self.ver_helper._ver_output == constants.DIFF_OF_DIFF:
-                            ctr_ver = (
-                                torch.abs(ver_labels)
-                                < self.ver_helper._diff_diff_crct_margin
-                            ).to(cu.get_device())
-                        else:
-                            raise ValueError(
-                                f"Unknown ver output type {self.ver_helper._ver_output}"
-                            )
-                        num_verified = torch.sum(ctr_ver).item() / len(idxs)
-                        log_ver_pc.append(num_verified)
-
-                        if num_verified > 0:
-                            if len(idxs) == 1:
-                                ctr_loss = ctr_loss.squeeze()
-                            else:
-                                ctr_loss = torch.mean(ctr_loss[ctr_ver.squeeze()])
-                        else:
-                            ctr_loss = torch.tensor(0.0).to(cu.get_device())
-
-                    loss = loss + (self.ctr_lambda * ctr_loss)
-
-                if torch.isnan(loss):
-                    pass
 
                 optimizer.zero_grad()
                 loss.backward()
@@ -224,63 +114,10 @@ class RecHelper:
                 if len(idxs) == 1:
                     tdu.batch_norm_on(self._model)
 
-                if constants.sw is not None:
-                    constants.sw.add_scalar(
-                        tag="fct_loss",
-                        scalar_value=fct_loss.item(),
-                        global_step=global_step,
-                    )
-                    if self.enforce_ctrloss:
-                        constants.sw.add_scalar(
-                            tag="ctr_loss",
-                            scalar_value=ctr_loss.item(),
-                            global_step=global_step,
-                        )
-                        constants.sw.add_scalar(
-                            tag="tot_loss",
-                            scalar_value=loss.item(),
-                            global_step=global_step,
-                        )
-                        if self.use_verifier == True:
-                            constants.sw.add_scalar(
-                                tag="num_verified",
-                                scalar_value=num_verified,
-                                global_step=global_step,
-                            )
-
-                if self.enforce_ctrloss:
-                    if self.use_verifier:
-                        pbar.set_postfix(
-                            {
-                                "floss": fct_loss.item(),
-                                "ctrloss": ctr_loss.item(),
-                                "ver_pc": num_verified,
-                            }
-                        )
-                    else:
-                        pbar.set_postfix(
-                            {"floss": fct_loss.item(), "ctrloss": ctr_loss.item()}
-                        )
-                else:
-                    pbar.set_postfix({"fct_loss": fct_loss.item()})
+                pbar.set_postfix({"fct_loss": fct_loss.item()})
 
                 itr += 1
                 global_step += 1
-
-            if self.checkpoints is not None and (epoch + 1) in self.checkpoints:
-                self.rec_model.save_model(
-                    ver_model_name=f"{self.rec_model_name}-{epoch+1}"
-                )
-
-            if self.use_verifier and self.enforce_ctrloss:
-                constants.sw.add_scalar(
-                    tag="ver_pc",
-                    scalar_value=np.mean(log_ver_pc),
-                    global_step=epoch + 1,
-                )
-                constants.logger.info(
-                    f"ver_pc: {np.mean(log_ver_pc)} at epoch: {epoch+1}"
-                )
 
             # update the learning rate
             if lr_scheduler is not None:

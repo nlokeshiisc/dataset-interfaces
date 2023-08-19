@@ -83,14 +83,19 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, cache=False):
                     "loss": losses,
                 }
             )
-            df.to_csv(constants.PROJ_DIR / "cache" / f"{shift}_preds.csv", index=False)
+            df.to_csv(
+                constants.imagenet_star_dir / "cache" / f"{shift}_preds.csv",
+                index=False,
+            )
 
         return acc_meter
 
 
 def df_to_acc(dataset_name):
     try:
-        df = pd.read_csv(constants.PROJ_DIR / "cache" / f"{dataset_name}_preds.csv")
+        df = pd.read_csv(
+            constants.imagenet_star_dir / "cache" / f"{dataset_name}_preds.csv"
+        )
     except:
         print("Call evaluate_model with cache=True first")
         return

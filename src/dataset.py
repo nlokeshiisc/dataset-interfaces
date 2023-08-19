@@ -110,3 +110,31 @@ class DfDataset(AbsDataset):
             image_label,
             image_shift,
         )
+
+
+class DFRho(Dataset):
+    """This class processes the dataframes from the cache"""
+
+    def __init__(self, df: pd.DataFrame) -> None:
+        self.df: pd.DataFrame = df
+        self.image_files = self.df["image_files"].values
+        self.true_y = self.df["true_y"].values
+        self.pred_y = self.df["pred_y"].values
+        self.cnf = self.df["cnf"].values
+        self.loss = self.df["loss"].values
+
+    def __len__(self) -> int:
+        return len(self.df)
+
+    def __getitem__(self, idx):
+        return {
+            "image_files": self.image_files[idx],
+            "true_y": self.true_y[idx],
+            "pred_y": self.pred_y[idx],
+            "cnf": self.cnf[idx],
+            "loss": self.loss[idx],
+        }
+
+    def get_item(self, image_file):
+        idx = np.where(self.image_files == image_file)[0][0]
+        return self.__getitem__(idx)
