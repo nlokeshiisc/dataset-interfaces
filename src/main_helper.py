@@ -85,11 +85,11 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, cache=False):
                     constants.TRUEY: true_labels,
                     constants.PREDY: pred_labels,
                     constants.CNF: cnf,
-                    "loss": losses,
+                    constants.LOSS: losses,
                 }
             )
             df.to_csv(
-                constants.imagenet_star_dir / "cache" / f"{shift}_preds.csv",
+                constants.PROJ_DIR / "cache" / f"{shift}_preds.csv",
                 index=False,
             )
 

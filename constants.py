@@ -65,6 +65,10 @@ shift_idx: dict = {
     STUDIO: 8,
 }
 
+ALLSHIFTS = shift_idx.keys()
+LIGHT_SHIFTS = [DUSK, NIGHT, SUNLIGHT, FOG, STUDIO]
+BG_SHIFTS = [FOREST, RAIN, SNOW]
+
 RANDOM_SIM = "random_simulator"
 
 logger: Logger = None

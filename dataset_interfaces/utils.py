@@ -8,6 +8,10 @@ from torchvision import transforms
 from PIL import Image
 import matplotlib.pyplot as plt
 
+import os
+from pathlib import Path
+import constants as constants
+
 
 def load_initializer_text(text_encoder, tokenizer, init_str, placeholder_name):
     tokenization = tokenizer.tokenize(init_str)
@@ -91,6 +95,11 @@ class ImageNet_Star_Dataset(ImageFolder):
             index = self.mask_indices[index]
 
         path, target = self.samples[index]
+
+        if isinstance(path, Path):
+            path = str(path.absolute())
+        path = os.path.relpath(path, constants.PROJ_DIR)
+
         sample = self.loader(path)
         if self.transform is not None:
             sample = self.transform(sample)

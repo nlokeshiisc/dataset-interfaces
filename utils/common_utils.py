@@ -51,14 +51,14 @@ def get_log_dir(config: dict = None, sw=False) -> Path:
         config (dict, optional): _description_. Defaults to None.
     """
     if not sw:
-        log_dir: Path = constants.LOG_DIR
+        rslts_dir: Path = constants.LOG_DIR
     else:
-        log_dir: Path = constants.TBDIR
+        rslts_dir: Path = constants.TBDIR
 
     dataset_name = config[constants.DATASET_SPECS][constants.DATASET_NAME]
-    log_dir = log_dir / dataset_name
+    rslts_dir = rslts_dir / dataset_name
 
-    return log_dir
+    return rslts_dir
 
 
 def set_sw(config: dict, summ_dir=None):
@@ -66,6 +66,7 @@ def set_sw(config: dict, summ_dir=None):
     if summ_dir is None:
         summ_dir = get_log_dir(config, sw=True)
     summ_dir: Path = summ_dir / config[constants.EXPTNAME]
+
     if os.path.exists(str(summ_dir.absolute())):
         shutil.rmtree(
             str(summ_dir.absolute()), ignore_errors=True
@@ -107,20 +108,16 @@ def set_logger(config: dict = None, log_dir: Path = None, log_file_name: str = N
 def parse_args(args, unknown_args) -> dict:
     """This API is a facade for all the code modulated changes that are to be made to the config.
     The following rules are followed that automatically applies changes to the config:
-        1. If rnd sim is used, then we add suffix -rnd=sim to
-            ver
-            rec
-            exptname
-        2. We add -imgemb=True/False to the ver model name
-        3. We add -ver=accrej/diffdiff to:
-            ver -- only if rnd_sim is False
-            rec -- only if use_ver is True
-            exptname -- only when rec_trn=False or use_ver=True
-        @Note: We will do (3) only if sim is not random
-        4. We suffix the dataset corruption ratio to the exptname
-        5. We push the sim_args to kwargs of the classifier
-
-
+        1. If dataset is imagenet_star
+            - If len(sel_classes) < 1000
+                - Add sub to expt_name, rec_model_name
+            - If shift is light_shifts
+                - Add light to expt_name, rec_model_name
+            - if shifts is custom
+                - Add first letter of each shift to expt_name, rec_model_name
+            - Add first letter of rec_input to expt_name, rec_model_name
+                - In small case
+                - sorted
     Args:
         args (_type_): _description_
         unknown_args (_type_): _description_
@@ -130,6 +127,53 @@ def parse_args(args, unknown_args) -> dict:
     """
     config = __load_config_file(args, unknown_args)
 
+    # %% Manipulate the model name and expt name based on the config
+    sfx = ""
+    dataset_name = config[constants.DATASET_SPECS][constants.DATASET_NAME]
+    if dataset_name == constants.IMSTAR:
+        # Sel classes
+        sel_classes = config[constants.DATASET_SPECS][constants.SEL_CLASSES]
+        if len(sel_classes) < 1000:
+            sfx = f"{sfx}-sub"
+
+        # Shifts
+        shifts = config[constants.GENERAL_SPECS][constants.SHIFT]
+        custom = False
+        if len(shifts) == len(constants.LIGHT_SHIFTS):
+            for ss in constants.LIGHT_SHIFTS:
+                if ss not in shifts:
+                    custom = True
+            if custom == False:
+                sfx = f"{sfx}-light"
+        if len(shifts) == len(constants.BG_SHIFTS) and custom == True:
+            custom = False
+            for ss in constants.BG_SHIFTS:
+                if ss not in shifts:
+                    custom = True
+            if custom == False:
+                sfx = f"{sfx}-bg"
+        else:
+            custom = True
+            sfx = f"{sfx}-{'_'.join(shifts)}"
+
+        # Recourse input
+        rec_input = config[constants.REC_SPECS][constants.KWARGS][constants.INPUT]
+        # This is for x, beta
+        if len(rec_input) == 2:
+            if "x" in rec_input and constants.BETA in rec_input:
+                sfx = f"{sfx}-xbeta"
+
+        # Change the rec_model_name
+        rec_model_name = config[constants.REC_SPECS][constants.MODEL_NAME]
+        rec_model_name = f"{rec_model_name}{sfx}"
+        config[constants.REC_SPECS][constants.MODEL_NAME] = rec_model_name
+
+        # Change the expt name
+        expt_name = config[constants.EXPTNAME]
+        expt_name = f"{expt_name}{sfx}"
+        config[constants.EXPTNAME] = expt_name
+
+    # %% Config manipulations are done!
     dict_print(config)
 
     gpuid = config[constants.GPUID]

@@ -2,14 +2,7 @@ import constants as constants
 
 config = {
     constants.GENERAL_SPECS: {
-        constants.SHIFT: [
-            constants.BASE,
-            constants.DUSK,
-            constants.NIGHT,
-            constants.FOG,
-            constants.SNOW,
-            constants.STUDIO,
-        ],
+        constants.SHIFT: constants.LIGHT_SHIFTS,
     },
     constants.DATASET_SPECS: {
         constants.DATASET_NAME: constants.IMSTAR,
@@ -27,14 +20,15 @@ config = {
         ],
     },
     constants.REC_SPECS: {
-        constants.MODEL_NAME: "subset_rec",
+        constants.MODEL_NAME: "fct",
         constants.KWARGS: {
             constants.IMGEMBDIM: 256,
             constants.EMBDIM: 64,
+            constants.INPUT: ["x", constants.BETA],
         },
     },
-    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: False, constants.REC: True},
+    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: True, constants.REC: False},
     constants.SEED: 0,
     constants.GPUID: 5,
-    constants.EXPTNAME: "factual_x_beta",
+    constants.EXPTNAME: "fct",
 }

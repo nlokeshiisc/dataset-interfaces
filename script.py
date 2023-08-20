@@ -5,17 +5,17 @@ import constants as constants
 import numpy as np
 from joblib import Parallel, delayed
 
-GPU = 3
+GPU = 1
 
 shifts = [
     # constants.BASE,
     # constants.DUSK,
-    # constants.FOREST,
+    constants.FOREST,
     # constants.FOG,
     # constants.NIGHT,
     # constants.SNOW,
-    # constants.RAIN,
-    constants.STUDIO,
+    constants.RAIN,
+    # constants.STUDIO,
     constants.SUNLIGHT,
 ]
 
@@ -28,4 +28,4 @@ def run_shift(shift):
     os.system(cmd)
 
 
-Parallel(n_jobs=4)(delayed(run_shift)(shift) for shift in shifts)
+Parallel(n_jobs=3)(delayed(run_shift)(shift) for shift in shifts)
