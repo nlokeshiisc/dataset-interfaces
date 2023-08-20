@@ -35,7 +35,7 @@ RESNET_TRANSFORMS = {
     TRN: transforms.Compose(
         [
             transforms.ToTensor(),
-            transforms.Resize(256),
+            transforms.Resize(256, antialias=True),
             transforms.CenterCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
@@ -44,7 +44,7 @@ RESNET_TRANSFORMS = {
     TST: transforms.Compose(
         [
             transforms.ToTensor(),
-            transforms.Resize(256),
+            transforms.Resize(256, antialias=True),
             transforms.CenterCrop(224),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ]
@@ -66,8 +66,8 @@ shift_idx: dict = {
 }
 
 ALLSHIFTS = shift_idx.keys()
-LIGHT_SHIFTS = [DUSK, NIGHT, SUNLIGHT, FOG, STUDIO]
-BG_SHIFTS = [FOREST, RAIN, SNOW]
+LIGHT_SHIFTS = sorted([DUSK, NIGHT, SUNLIGHT, FOG, STUDIO])
+BG_SHIFTS = sorted([FOREST, RAIN, SNOW])
 
 RANDOM_SIM = "random_simulator"
 
@@ -135,6 +135,7 @@ REALARGS = "real_args"
 SIMARGS = "sim_args"
 REAL_PREDS = "real_preds"
 
+IMAGE = "image"
 IMAGE_ID = "image_id"
 LOAD_MODEL = "load_model"
 

@@ -12,6 +12,7 @@ from utils import common_utils as cu
 import itertools
 from src import dataset as ds
 import numpy as np
+from src import data_helper as dh
 
 
 def get_model(model_name, pretrn=True):
@@ -140,11 +141,11 @@ def get_rec_datasets(shifts):
         ds_img_file = imstar_ds.samples[rnd_idx][0].split("/")[-1]
         assert img_file == ds_img_file, "Image file mismatch"
 
-        shift_rho = ds.DFRho(df=shift_df)
+        cache_ds = ds.DFRho(df=shift_df)
 
         shifts_ds[shift] = {}
         shifts_ds[shift]["ds"] = imstar_ds
-        shifts_ds[shift][constants.RHO] = shift_rho
+        shifts_ds[shift]["cache"] = cache_ds
 
     return shifts_ds
 
@@ -161,3 +162,34 @@ if False:
 
         print(f"Dataset: {shift}, accuracy: {acc_meters[shift].accuracy()}")
     pass
+
+
+def get_rec_dh(trn_df, tst_df, **kwargs):
+    rec_trn_ds = ds.DfDataset(
+        dataset_name=constants.IMSTAR,
+        dataset_split=constants.TRN,
+        df=trn_df,
+        transform=constants.RESNET_TRANSFORMS[constants.TRN],
+    )
+    rec_trntst_ds = ds.DfDataset(
+        dataset_name=constants.IMSTAR,
+        dataset_split=constants.TRNTST,
+        df=trn_df,
+        transform=constants.RESNET_TRANSFORMS[constants.TRNTST],
+    )
+    rec_tst_ds = ds.DfDataset(
+        dataset_name=constants.IMSTAR,
+        dataset_split=constants.TST,
+        df=tst_df,
+        transform=constants.RESNET_TRANSFORMS[constants.TST],
+    )
+    rec_dh = dh.RecDataHelper(
+        dataset_name=constants.IMSTAR,
+        dataset_type="real",
+        trn_ds=rec_trn_ds,
+        trntst_ds=rec_trntst_ds,
+        tst_ds=rec_tst_ds,
+        **kwargs,
+    )
+
+    return rec_dh

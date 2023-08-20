@@ -24,6 +24,8 @@ class AbsDataset(Dataset, ABC):
         self.image_files = self.df[constants.IMGFILE].values
         self.labels = self.df[constants.LABEL].values
         self.src_shifts = self.df[constants.SHIFT].values
+        self.rho = self.df[constants.RHO].values
+        self.loss = self.df[constants.LOSS].values
 
         self.transform = transform
         self.classes = np.unique(self.labels)
@@ -67,6 +69,14 @@ class AbsDataset(Dataset, ABC):
         return np.unique(self.src_shifts, axis=0)
 
     @property
+    def _rho(self) -> np.ndarray:
+        return self.rho
+
+    @property
+    def _loss(self) -> np.ndarray:
+        return self.loss
+
+    @property
     def _num_betas(self) -> int:
         return len(self._unique_shifts)
 
@@ -98,18 +108,28 @@ class DfDataset(AbsDataset):
 
     def __getitem__(self, idx):
         image_file = self._image_files[idx]
-        image_label = self._image_labels[idx]
-        image_shift = self._src_shifts[idx]
+
+        if isinstance(image_file, Path):
+            image_file = str(image_file.absolute())
+
         image = dsu.load_color_image(image_file)
         image = image / 255.0
         if self.transform is not None:
             image = self.transform(image)
-        return (
-            idx,
-            image,
-            image_label,
-            image_shift,
-        )
+
+        image_label = self._image_labels[idx]
+        image_shift = self._src_shifts[idx]
+        image_rho = self._rho[idx]
+        image_loss = self._loss[idx]
+
+        return idx, {
+            constants.IMGFILE: image_file,
+            constants.IMAGE: image,
+            constants.LABEL: image_label,
+            constants.SHIFT: image_shift,
+            constants.RHO: image_rho,
+            constants.LOSS: image_loss,
+        }
 
 
 class DFRho(Dataset):

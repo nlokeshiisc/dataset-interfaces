@@ -6,13 +6,13 @@ import constants as constants
 from pathlib import Path
 import os
 from utils import common_utils as cu
-from src import data_helper as dh
 import pandas as pd
 from src import rec_helper as rech
 from src import models
 import numpy as np
 from src import dataset as ds
 from dataset_interfaces import utils as dfi_utils
+import copy
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 import argparse
@@ -53,6 +53,7 @@ if trn_args[constants.COMPUTE_RHO] == True:
 
 # %% Rec model
 
+
 if trn_args[constants.REC] == True:
     shifts_ds: dict = mh.get_rec_datasets(shifts=shifts)
 
@@ -60,52 +61,52 @@ if trn_args[constants.REC] == True:
         datasets=shifts_ds, **rec_args
     )
 
-    df = {
+    trn_df = {
         constants.IMGFILE: [],
         constants.LABEL: [],
         constants.SHIFT: [],
         constants.RHO: [],
+        constants.LOSS: [],
     }
+    tst_df = copy.deepcopy(trn_df)
 
     for cls, cls_name in enumerate(sel_classes):
         for idx in range(10, 50):
             sampled_shifts = np.random.choice(shifts, 2)
-            for sampled_shift in sampled_shifts:
-                shift_ds: dfi_utils.ImageNet_Star_Dataset = shifts_ds[sampled_shift][
-                    "ds"
-                ]
-                shift_rho: ds.DFRho = shifts_ds[sampled_shift][constants.RHO]
-
+            for ss in shifts:
+                shift_ds: dfi_utils.ImageNet_Star_Dataset = shifts_ds[ss]["ds"]
+                cache_ds: ds.DFRho = shifts_ds[ss]["cache"]
                 img_file: Path = (
-                    constants.imagenet_star_dir
-                    / sampled_shift
-                    / cls_name
-                    / f"{idx}.jpg"
+                    constants.imagenet_star_dir / ss / cls_name / f"{idx}.jpg"
                 )
-                assert img_file.exists()
-                df[constants.IMGFILE].append(img_file)
-                df[constants.LABEL].append(cls)
-                df[constants.SHIFT].append(sampled_shift)
-                df[constants.RHO].append(
-                    shift_rho.get_item(image_file=img_file)[constants.CNF]
-                )
+                assert img_file.exists(), "The image file does not exist"
+                rho_loss = cache_ds.get_item(image_file=img_file)
+                shift_rho = rho_loss[constants.CNF]
+                shift_loss = rho_loss[constants.LOSS]
 
-    df = pd.DataFrame(df)
+                tst_df[constants.IMGFILE].append(img_file)
+                tst_df[constants.LABEL].append(cls)
+                tst_df[constants.SHIFT].append(ss)
+                tst_df[constants.RHO].append(shift_rho)
+                tst_df[constants.LOSS].append(shift_loss)
 
-    rec_ds = ds.DfDataset(
-        dataset_name=constants.IMSTAR,
-        dataset_split="train",
-        df=df,
-        transform=constants.RESNET_TRANSFORMS[constants.TRN],
-    )
-    rec_dh = dh.RecDataHelper(
-        dataset_name=constants.IMSTAR, dataset_type="real", trn_ds=rec_ds, **rec_args
-    )
+                if ss in sampled_shifts:
+                    trn_df[constants.IMGFILE].append(img_file)
+                    trn_df[constants.LABEL].append(cls)
+                    trn_df[constants.SHIFT].append(ss)
+                    trn_df[constants.RHO].append(shift_rho)
+                    trn_df[constants.LOSS].append(shift_loss)
+
+    trn_df = pd.DataFrame(trn_df)
+    tst_df = pd.DataFrame(tst_df)
+
+    rec_dh = mh.get_rec_dh(trn_df, tst_df, **rec_args)
 
     rec_helper = rech.RecHelper(
         rec_model=rec_model,
         rec_dh=rec_dh,
         rec_model_name=rec_model_name,
+        **rec_args,
     )
 
     rec_helper.train_rec(**rec_args)

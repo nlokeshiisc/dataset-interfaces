@@ -1,4 +1,4 @@
-img_file,true_y,pred_y,cnf,loss
+image_files,true_y,pred_y,cnf,loss
 data/imagenet_star/in_bright_sunlight/0/00.jpg,0,0,0.998,0.002174
 data/imagenet_star/in_bright_sunlight/0/01.jpg,0,0,0.997,0.003057
 data/imagenet_star/in_bright_sunlight/0/02.jpg,0,0,0.9937,0.006344

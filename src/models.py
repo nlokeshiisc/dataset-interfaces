@@ -89,9 +89,7 @@ class FNN(nn.Module):
             self.model.add_module(
                 f"{self.prefix}-beta_hid_{idx}", nn.Linear(prev, hdim)
             )
-            self.model.add_module(
-                f"{self.prefix}-lReLU_{idx}", nn.LeakyReLU(inplace=True)
-            )
+            self.model.add_module(f"{self.prefix}-ReLU_{idx}", nn.ReLU(inplace=True))
             if self.batchnorm:
                 self.model.add_module(f"{self.prefix}-bn_{idx}", nn.BatchNorm1d(hdim))
 
@@ -128,12 +126,7 @@ class RecModel(nn.Module, ABC):
         self.sm = nn.Softmax(dim=1)
 
     @abstractmethod
-    def forward(
-        self,
-        *,
-        img,
-        src_shift,
-    ):
+    def forward(self, *, img, src_shift, rec_shift):
         raise NotImplementedError()
 
     @abstractmethod
@@ -141,6 +134,7 @@ class RecModel(nn.Module, ABC):
         self,
         *,
         img,
+        src_shift,
     ):
         raise NotImplementedError()
 
@@ -318,9 +312,9 @@ class TarnetRecModel(RecModel):
         super().__init__(datasets, *args, **kwargs)
 
         self.rec_beta_arms = nn.ModuleDict()
-        for sh in self.shifts:
-            self.rec_beta_arms[f"rec_beta_{sh}"] = self._rho_cls_model(
-                prefix=f"rec_beta_{sh}", nn_arch=self.nn_arch, batch_norm=True
+        for shift_id in range(self.num_shifts):
+            self.rec_beta_arms[f"rec_beta_{shift_id}"] = self._rho_cls_model(
+                prefix=f"rec_beta_{shift_id}", nn_arch=self.nn_arch, batch_norm=True
             )
 
     def forward(
@@ -349,8 +343,8 @@ class TarnetRecModel(RecModel):
         shift_emb = self.shift_emb(src_shift_ids)
         emb = torch.cat([img_emb, shift_emb], dim=1)
 
-        out = torch.zeros(len(emb)).to(cu.get_device(), dtype=torch.float16)
-        for _ in range(self.shifts):
+        out = torch.zeros(len(emb)).to(cu.get_device(), dtype=torch.float32)
+        for _ in range(self.num_shifts):
             idxs = torch.where(rec_shift_ids == _)[0]
 
             if len(idxs) == 1:
@@ -389,7 +383,7 @@ class TarnetRecModel(RecModel):
         emb = torch.cat([img_emb, shift_emb], dim=1)
 
         out = torch.zeros(len(emb), self.num_shifts).to(
-            cu.get_device(), dtype=torch.float16
+            cu.get_device(), dtype=torch.float32
         )
 
         for idx, shift in enumerate(self.shifts):

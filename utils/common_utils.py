@@ -29,6 +29,7 @@ def set_cuda_device(gpu_num):
     if type(gpu_num) == int:
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
         os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_num)
+        print(f"Using GPU {gpu_num}")
     else:
         raise ValueError(f"Only int supported. {gpu_num} not supported")
 
@@ -127,6 +128,10 @@ def parse_args(args, unknown_args) -> dict:
     """
     config = __load_config_file(args, unknown_args)
 
+    config[constants.REC_SPECS][constants.KWARGS][constants.SEL_CLASSES] = config[
+        constants.DATASET_SPECS
+    ][constants.SEL_CLASSES]
+
     # %% Manipulate the model name and expt name based on the config
     sfx = ""
     dataset_name = config[constants.DATASET_SPECS][constants.DATASET_NAME]
@@ -137,23 +142,29 @@ def parse_args(args, unknown_args) -> dict:
             sfx = f"{sfx}-sub"
 
         # Shifts
+        config[constants.GENERAL_SPECS][constants.SHIFT] = sorted(
+            config[constants.GENERAL_SPECS][constants.SHIFT]
+        )
         shifts = config[constants.GENERAL_SPECS][constants.SHIFT]
-        custom = False
+
+        custom = True
         if len(shifts) == len(constants.LIGHT_SHIFTS):
+            flag = False
             for ss in constants.LIGHT_SHIFTS:
                 if ss not in shifts:
-                    custom = True
-            if custom == False:
+                    flag = True
+            if flag == False:
                 sfx = f"{sfx}-light"
-        if len(shifts) == len(constants.BG_SHIFTS) and custom == True:
-            custom = False
+                custom = False
+        if len(shifts) == len(constants.BG_SHIFTS):
+            flag = False
             for ss in constants.BG_SHIFTS:
                 if ss not in shifts:
-                    custom = True
-            if custom == False:
+                    flag = True
+            if flag == False:
                 sfx = f"{sfx}-bg"
-        else:
-            custom = True
+                custom = False
+        if custom == True:
             sfx = f"{sfx}-{'_'.join(shifts)}"
 
         # Recourse input

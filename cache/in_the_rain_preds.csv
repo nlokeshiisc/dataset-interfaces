@@ -1,4 +1,4 @@
-img_file,true_y,pred_y,cnf,loss
+image_files,true_y,pred_y,cnf,loss
 data/imagenet_star/in_the_rain/0/00.jpg,0,0,0.9966,0.003498
 data/imagenet_star/in_the_rain/0/01.jpg,0,0,0.9966,0.003391
 data/imagenet_star/in_the_rain/0/02.jpg,0,0,0.995,0.004723

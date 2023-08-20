@@ -11,6 +11,8 @@ import numpy as np
 from src import dataset as ds
 from tqdm import tqdm
 from utils import torch_data_utils as tdu
+from dataset_interfaces import utils as dsi_utils
+from dataset_interfaces import imagenet_utils as dsi_imutils
 
 
 class RecHelper:
@@ -25,7 +27,18 @@ class RecHelper:
         self.rec_dh = rec_dh
         self.rec_model_name = rec_model_name
 
-        self.lr = kwargs.get(constants.LRN_RATE, 0.005)
+        self.sel_classes = kwargs.get(constants.SEL_CLASSES)
+        self.sel_classes = sorted(self.sel_classes)
+        self.cls_to_imgnet = {}
+        for _, c in enumerate(self.sel_classes):
+            self.cls_to_imgnet[_] = dsi_imutils.sysnet_to_clsid[c]
+
+        constants.logger.info(
+            f"seld_classes: {self.sel_classes}, imagenet_ids: {self.cls_to_imgnet}"
+        )
+        print(f"seld_classes: {self.sel_classes}, imagenet_ids: {self.cls_to_imgnet}")
+
+        self.lr = kwargs.get(constants.LRN_RATE, 1e-4)
         self.checkpoints = kwargs.get(constants.CHECKPOINTS, [])
         self.ctr_lambda = kwargs.get(constants.CTR_LAMBDA, 0.1)
         self.enforce_ctrloss = kwargs.get(constants.ENFORCE_CTRLOSS, False)
@@ -79,7 +92,7 @@ class RecHelper:
 
         self._model.train()
 
-        self._model.to(cu.get_device(), dtype=torch.float16)
+        self._model.to(cu.get_device(), dtype=torch.float32)
         params = [p for p in self._model.parameters() if p.requires_grad]
         optimizer = torch.optim.AdamW(
             params,
@@ -92,18 +105,25 @@ class RecHelper:
         for epoch in range(epochs):
             self._model.train()
 
-            log_ver_pc = []
-
             pbar = tqdm(trn_loader, total=len(trn_loader))
-            for idxs, imgs, ys, shifts, rhos in pbar:
-                imgs = imgs.to(cu.get_device(), dtype=torch.float16)
-                ys = ys.to(cu.get_device(), dtype=torch.long)
-                rhos = rhos.to(cu.get_device(), dtype=torch.float16)
+            for idxs, batch in pbar:
+                # Half precision for training screws up training: https://github.com/soumith/cudnn.torch/issues/377
+                imgs = batch[constants.IMAGE].to(cu.get_device(), dtype=torch.float32)
+                labels = batch[constants.LABEL].to(cu.get_device(), dtype=torch.long)
+                rhos = batch[constants.RHO].to(cu.get_device(), dtype=torch.float32)
+                cls_loss = batch[constants.LOSS].to(
+                    cu.get_device(), dtype=torch.float32
+                )
+                src_shifts = batch[constants.SHIFT]
 
                 if len(idxs) == 1:
                     tdu.batch_norm_off(self._model)
 
-                rho_preds = self._model.forward(img=imgs, src_shift=shifts)
+                # For Factual model, src shift is the same as rec shift while training
+                rho_preds = self._model.forward(
+                    img=imgs, src_shift=src_shifts, rec_shift=src_shifts
+                )
+
                 fct_loss = self._mse_loss(rho_preds.squeeze(), rhos.squeeze())
                 loss = fct_loss
 
@@ -118,6 +138,15 @@ class RecHelper:
 
                 itr += 1
                 global_step += 1
+
+                if constants.sw is not None:
+                    constants.sw.add_scalar(
+                        "train/fct_loss", fct_loss.item(), global_step
+                    )
+
+            if epoch % 5 == 0:
+                # TODO Add testing code
+                pass
 
             # update the learning rate
             if lr_scheduler is not None:
