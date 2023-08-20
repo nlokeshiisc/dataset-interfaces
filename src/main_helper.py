@@ -11,6 +11,7 @@ from utils import torch_utils as tu
 from utils import common_utils as cu
 import itertools
 from src import dataset as ds
+import numpy as np
 
 
 def get_model(model_name, pretrn=True):
@@ -83,7 +84,7 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, cache=False):
                     constants.IMGFILE: image_files,
                     constants.TRUEY: true_labels,
                     constants.PREDY: pred_labels,
-                    "cnf": cnf,
+                    constants.CNF: cnf,
                     "loss": losses,
                 }
             )
@@ -124,14 +125,21 @@ def get_rec_datasets(shifts):
     """
     shifts_ds: dict = {}
     for shift in shifts:
-        imstar_ds = get_ds_dl(shift)
+        imstar_ds = get_ds_dl(shift, loader=False)
         try:
-            shift_df = pd.read_csv(
-                constants.imagenet_star_dir / "cache" / f"{shift}_preds.csv"
-            )
+            shift_df = pd.read_csv(constants.PROJ_DIR / "cache" / f"{shift}_preds.csv")
         except:
             print("Call evaluate_model with cache=True first")
             return
+        assert len(shift_df) == len(
+            imstar_ds
+        ), "Length mismatch between the dataset and the cache dataframe"
+
+        rnd_idx = np.random.choice(len(shift_df))
+        img_file = shift_df.iloc[rnd_idx]["image_files"].split("/")[-1]
+        ds_img_file = imstar_ds.samples[rnd_idx][0].split("/")[-1]
+        assert img_file == ds_img_file, "Image file mismatch"
+
         shift_rho = ds.DFRho(df=shift_df)
 
         shifts_ds[shift] = {}

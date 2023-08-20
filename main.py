@@ -71,10 +71,10 @@ if trn_args[constants.REC] == True:
         for idx in range(10, 50):
             sampled_shifts = np.random.choice(shifts, 2)
             for sampled_shift in sampled_shifts:
-                shift_ds: dfi_utils.ImageNet_Star_Dataset = sampled_shifts[
-                    sampled_shift
-                ]["ds"]
-                shift_rho: ds.DFRho = sampled_shifts[sampled_shift][constants.RHO]
+                shift_ds: dfi_utils.ImageNet_Star_Dataset = shifts_ds[sampled_shift][
+                    "ds"
+                ]
+                shift_rho: ds.DFRho = shifts_ds[sampled_shift][constants.RHO]
 
                 img_file: Path = (
                     constants.imagenet_star_dir
@@ -87,7 +87,7 @@ if trn_args[constants.REC] == True:
                 df[constants.LABEL].append(cls)
                 df[constants.SHIFT].append(sampled_shift)
                 df[constants.RHO].append(
-                    shift_rho.get_item(image_file=img_file)[constants.RHO]
+                    shift_rho.get_item(image_file=img_file)[constants.CNF]
                 )
 
     df = pd.DataFrame(df)

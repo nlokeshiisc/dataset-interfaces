@@ -117,11 +117,20 @@ class DFRho(Dataset):
 
     def __init__(self, df: pd.DataFrame) -> None:
         self.df: pd.DataFrame = df
-        self.image_files = self.df[constants.IMGFILE].values
+        self.image_files = self.df["image_files"].tolist()
+
+        if self.image_files[0].startswith("data"):
+            # make all paths as absolute
+            prefix_dir = constants.PROJ_DIR
+            self.image_files = [
+                str(Path(prefix_dir, image_file)) for image_file in self.image_files
+            ]
+            self.df["image_files"] = self.image_files
+
         self.true_y = self.df[constants.TRUEY].values
         self.pred_y = self.df[constants.PREDY].values
-        self.cnf = self.df["cnf"].values
-        self.loss = self.df["loss"].values
+        self.cnf = self.df[constants.CNF].values
+        self.loss = self.df[constants.LOSS].values
 
     def __len__(self) -> int:
         return len(self.df)
@@ -131,10 +140,12 @@ class DFRho(Dataset):
             constants.IMGFILE: self.image_files[idx],
             constants.TRUEY: self.true_y[idx],
             constants.PREDY: self.pred_y[idx],
-            "cnf": self.cnf[idx],
-            "loss": self.loss[idx],
+            constants.CNF: self.cnf[idx],
+            constants.LOSS: self.loss[idx],
         }
 
     def get_item(self, image_file) -> dict:
-        idx = np.where(self.image_files == image_file)[0][0]
+        if isinstance(image_file, Path):
+            image_file = str(image_file.absolute())
+        idx = self.image_files.index(image_file)
         return self.__getitem__(idx)
