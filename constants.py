@@ -192,6 +192,7 @@ TABLE_LOOKUP = "table_lookup"
 
 LOAD_CLS_TRN = "load_cls_trn"
 
+IMAGE = "image"
 IMGFILE = "img_file"
 CNF = "cnf"
 LOSS = "loss"

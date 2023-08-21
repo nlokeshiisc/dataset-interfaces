@@ -7,7 +7,6 @@ from pathlib import Path
 import os
 from utils import common_utils as cu
 import pandas as pd
-from src import rec_helper as rech
 from src import models
 import numpy as np
 from src import dataset as ds
@@ -62,10 +61,13 @@ if trn_args[constants.REC] == True:
     )
 
     trn_df = {
+    trn_df = {
+    trn_df = {
         constants.IMGFILE: [],
         constants.LABEL: [],
         constants.SHIFT: [],
         constants.RHO: [],
+        constants.LOSS: [],
         constants.LOSS: [],
     }
     tst_df = copy.deepcopy(trn_df)
@@ -100,7 +102,11 @@ if trn_args[constants.REC] == True:
     trn_df = pd.DataFrame(trn_df)
     tst_df = pd.DataFrame(tst_df)
 
-    rec_dh = mh.get_rec_dh(trn_df, tst_df, **rec_args)
+    rec_dh = mh.get_rec_dh(
+        trn_df=trn_df,
+        tst_df=tst_df,
+        **rec_args,
+    )
 
     rec_helper = rech.RecHelper(
         rec_model=rec_model,
@@ -109,5 +115,6 @@ if trn_args[constants.REC] == True:
         **rec_args,
     )
 
+    # %% Train the rec model
     rec_helper.train_rec(**rec_args)
     rec_helper.save_model()

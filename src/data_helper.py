@@ -57,7 +57,7 @@ class DataHelper(ABC):
 
     @property
     def _name(self):
-        return f"{self.dataset_name}-{self.trn_ds._name}"
+        return f"{self.dataset_name}"
 
     @property
     def _trn_loader(self) -> DataLoader:

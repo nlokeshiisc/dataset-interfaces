@@ -1,0 +1,84 @@
+1000
+Shift: base
+Num classes: 1000
+Shift: at_dusk
+Num classes: 1000
+Shift: at_night
+Num classes: 1000
+Shift: in_bright_sunlight
+in_bright_sunlight n10565667 0
+in_bright_sunlight n09468604 0
+in_bright_sunlight n12144580 0
+in_bright_sunlight n13052670 0
+in_bright_sunlight n13040303 0
+in_bright_sunlight n09835506 0
+in_bright_sunlight n15075141 0
+in_bright_sunlight n09421951 35
+in_bright_sunlight n09472597 0
+in_bright_sunlight n09428293 0
+in_bright_sunlight n13044778 0
+in_bright_sunlight n12267677 0
+in_bright_sunlight n12057211 0
+in_bright_sunlight n13133613 0
+in_bright_sunlight n11939491 0
+in_bright_sunlight n12768682 0
+in_bright_sunlight n13037406 0
+in_bright_sunlight n12998815 0
+in_bright_sunlight n12985857 0
+in_bright_sunlight n11879895 0
+in_bright_sunlight n12620546 0
+in_bright_sunlight n10148035 0
+in_bright_sunlight n13054560 0
+Num classes: 977
+Shift: in_the_fog
+Num classes: 1000
+Shift: in_the_forest
+in_the_forest n10565667 0
+in_the_forest n09468604 0
+in_the_forest n12144580 0
+in_the_forest n07880968 0
+in_the_forest n13052670 0
+in_the_forest n09246464 0
+in_the_forest n13040303 0
+in_the_forest n09229709 0
+in_the_forest n09835506 0
+in_the_forest n15075141 0
+in_the_forest n09421951 0
+in_the_forest n09472597 0
+in_the_forest n09332890 0
+in_the_forest n07892512 0
+in_the_forest n09428293 0
+in_the_forest n13044778 0
+in_the_forest n12267677 0
+in_the_forest n07932039 0
+in_the_forest n12057211 0
+in_the_forest n13133613 0
+in_the_forest n07871810 0
+in_the_forest n09256479 0
+in_the_forest n09288635 0
+in_the_forest n11939491 0
+in_the_forest n07860988 8
+in_the_forest n07875152 0
+in_the_forest n07920052 0
+in_the_forest n12768682 0
+in_the_forest n13037406 0
+in_the_forest n07873807 0
+in_the_forest n07930864 0
+in_the_forest n12998815 0
+in_the_forest n09193705 0
+in_the_forest n09399592 0
+in_the_forest n12985857 0
+in_the_forest n11879895 0
+in_the_forest n12620546 0
+in_the_forest n10148035 0
+in_the_forest n13054560 0
+Num classes: 961
+Shift: in_the_rain
+in_the_rain n15075141 0
+in_the_rain n13133613 0
+in_the_rain n13054560 45
+Num classes: 997
+Shift: in_the_snow
+Num classes: 1000
+Shift: studio_lighting
+Num classes: 1000

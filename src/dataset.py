@@ -26,6 +26,8 @@ class AbsDataset(Dataset, ABC):
         self.src_shifts = self.df[constants.SHIFT].values
         self.rho = self.df[constants.RHO].values
         self.loss = self.df[constants.LOSS].values
+        self.rho = self.df[constants.RHO].values
+        self.loss = self.df[constants.LOSS].values
 
         self.transform = transform
         self.classes = np.unique(self.labels)
@@ -38,10 +40,6 @@ class AbsDataset(Dataset, ABC):
     @property
     def _dataset_split(self) -> str:
         return self.dataset_split
-
-    @property
-    def _name(self):
-        return self.dataset_name
 
     @property
     def _df(self) -> pd.DataFrame:
@@ -59,6 +57,22 @@ class AbsDataset(Dataset, ABC):
     @property
     def _classes(self) -> np.ndarray:
         return self.classes
+
+    @property
+    def _rho(self) -> np.ndarray:
+        return self.rho
+
+    @property
+    def _loss(self) -> np.ndarray:
+        return self.loss
+
+    @property
+    def _rho(self) -> np.ndarray:
+        return self.rho
+
+    @property
+    def _loss(self) -> np.ndarray:
+        return self.loss
 
     @property
     def _num_classes(self) -> int:

@@ -17,6 +17,7 @@ shifts = [
     constants.RAIN,
     # constants.STUDIO,
     constants.SUNLIGHT,
+    constants.RAIN,
 ]
 
 

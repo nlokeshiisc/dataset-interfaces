@@ -3,7 +3,6 @@ from torchvision.models import resnet50
 from dataset_interfaces import utils, imagenet_utils
 import constants as constants
 from torch.utils.data import DataLoader
-from collections import defaultdict
 from pprint import pprint
 from tqdm import tqdm
 import pandas as pd
@@ -13,6 +12,7 @@ import itertools
 from src import dataset as ds
 import numpy as np
 from src import data_helper as dh
+from pathlib import Path
 
 
 def get_model(model_name, pretrn=True):
@@ -150,14 +150,13 @@ def get_rec_datasets(shifts):
     return shifts_ds
 
 
-# %% Check Accuracies
-if False:
+def check_df_acc(shifts):
     # This is simply to sanity check the cached dataframes
     shift_ds, acc_meters = {}, {}
     for shift in shifts:
-        imstar_ds, dl = mh.get_ds_dl(dataset_name=shift)
+        imstar_ds = get_ds_dl(dataset_name=shift, loader=False)
         shift_ds[shift] = imstar_ds
-        acc_meter = mh.df_to_acc(dataset_name=shift)
+        acc_meter = df_to_acc(dataset_name=shift)
         acc_meters[shift] = acc_meter
 
         print(f"Dataset: {shift}, accuracy: {acc_meters[shift].accuracy()}")
@@ -193,3 +192,8 @@ def get_rec_dh(trn_df, tst_df, **kwargs):
     )
 
     return rec_dh
+
+
+def check_dir_acc(image_dir: Path):
+    """Checks the accuracy of the images in the directory"""
+    pass
