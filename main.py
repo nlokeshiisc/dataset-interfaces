@@ -12,6 +12,7 @@ import numpy as np
 from src import dataset as ds
 from dataset_interfaces import utils as dfi_utils
 import copy
+from src import rec_helper as rech
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 import argparse
@@ -60,8 +61,6 @@ if trn_args[constants.REC] == True:
         datasets=shifts_ds, **rec_args
     )
 
-    trn_df = {
-    trn_df = {
     trn_df = {
         constants.IMGFILE: [],
         constants.LABEL: [],
