@@ -113,6 +113,9 @@ class RecModel(nn.Module, ABC):
         self.shift_idxs = {shift: idx for idx, shift in enumerate(self.shifts)}
         self.num_shifts = len(self.shifts)
 
+        self.input: list = kwargs.get(constants.INPUT)
+        print(f"Input to the recourse model: {self.input}")
+
         self.embdim = kwargs.get(constants.EMBDIM, 64)
         self.shift_emb = Embedding(num_vocab=len(self.shifts), embdim=self.embdim)
         self.nn_arch = kwargs.get(constants.NN_ARCH, [128, 64])
@@ -124,6 +127,7 @@ class RecModel(nn.Module, ABC):
         self.all_dim = self.imgembdim + self.embdim
 
         self.sm = nn.Softmax(dim=1)
+        self.sigmoid = nn.Sigmoid()
 
     @abstractmethod
     def forward(self, *, img, src_shift, rec_shift):
@@ -358,6 +362,7 @@ class TarnetRecModel(RecModel):
             if len(idxs) == 1:
                 tdu.batch_norm_on(self.rec_beta_arms[f"rec_beta_{_}"])
 
+        out = self.sigmoid(out)
         return out
 
     def forward_all_beta(
@@ -391,6 +396,8 @@ class TarnetRecModel(RecModel):
             out[:, idx] += self.forward(
                 img=img, src_shift=src_shift, rec_shift=rec_shifts
             )
+
+        out = self.sigmoid(out)
         return out
 
     @property

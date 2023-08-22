@@ -10,7 +10,6 @@ import pandas as pd
 from src import models
 import numpy as np
 from src import dataset as ds
-from dataset_interfaces import utils as dfi_utils
 import copy
 from src import rec_helper as rech
 
@@ -54,66 +53,34 @@ if trn_args[constants.COMPUTE_RHO] == True:
 # %% Rec model
 
 
+shifts_ds: dict = mh.get_rec_datasets(shifts=shifts)
+
+rec_model: models.TarnetRecModel = models.TarnetRecModel(datasets=shifts_ds, **rec_args)
+
+trn_df, tst_df = mh.filter_trn_tst_df(
+    shifts=shifts, sel_classes=sel_classes, shifts_ds=shifts_ds
+)
+
+rec_dh = mh.get_rec_dh(
+    trn_df=trn_df,
+    tst_df=tst_df,
+    **rec_args,
+)
+
+rec_helper = rech.RecHelper(
+    rec_model=rec_model,
+    cls_model=cls_model,
+    rec_dh=rec_dh,
+    rec_model_name=rec_model_name,
+    **rec_args,
+)
+
 if trn_args[constants.REC] == True:
-    shifts_ds: dict = mh.get_rec_datasets(shifts=shifts)
-
-    rec_model: models.TarnetRecModel = models.TarnetRecModel(
-        datasets=shifts_ds, **rec_args
-    )
-
-    trn_df = {
-        constants.IMGFILE: [],
-        constants.LABEL: [],
-        constants.SHIFT: [],
-        constants.RHO: [],
-        constants.LOSS: [],
-        constants.LOSS: [],
-    }
-    tst_df = copy.deepcopy(trn_df)
-
-    for cls, cls_name in enumerate(sel_classes):
-        for idx in range(10, 50):
-            sampled_shifts = np.random.choice(shifts, 2)
-            for ss in shifts:
-                shift_ds: dfi_utils.ImageNet_Star_Dataset = shifts_ds[ss]["ds"]
-                cache_ds: ds.DFRho = shifts_ds[ss]["cache"]
-                img_file: Path = (
-                    constants.imagenet_star_dir / ss / cls_name / f"{idx}.jpg"
-                )
-                assert img_file.exists(), "The image file does not exist"
-                rho_loss = cache_ds.get_item(image_file=img_file)
-                shift_rho = rho_loss[constants.CNF]
-                shift_loss = rho_loss[constants.LOSS]
-
-                tst_df[constants.IMGFILE].append(img_file)
-                tst_df[constants.LABEL].append(cls)
-                tst_df[constants.SHIFT].append(ss)
-                tst_df[constants.RHO].append(shift_rho)
-                tst_df[constants.LOSS].append(shift_loss)
-
-                if ss in sampled_shifts:
-                    trn_df[constants.IMGFILE].append(img_file)
-                    trn_df[constants.LABEL].append(cls)
-                    trn_df[constants.SHIFT].append(ss)
-                    trn_df[constants.RHO].append(shift_rho)
-                    trn_df[constants.LOSS].append(shift_loss)
-
-    trn_df = pd.DataFrame(trn_df)
-    tst_df = pd.DataFrame(tst_df)
-
-    rec_dh = mh.get_rec_dh(
-        trn_df=trn_df,
-        tst_df=tst_df,
-        **rec_args,
-    )
-
-    rec_helper = rech.RecHelper(
-        rec_model=rec_model,
-        rec_dh=rec_dh,
-        rec_model_name=rec_model_name,
-        **rec_args,
-    )
-
     # %% Train the rec model
     rec_helper.train_rec(**rec_args)
     rec_helper.save_model()
+
+else:
+    rec_helper.load_model()
+    rec_acc = rec_helper.rec_acc(save_probs=False, dataset_split=constants.TST)
+    print(f"Rec acc: {rec_acc}")

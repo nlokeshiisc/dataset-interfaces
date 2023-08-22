@@ -13,6 +13,8 @@ from src import dataset as ds
 import numpy as np
 from src import data_helper as dh
 from pathlib import Path
+import copy
+from dataset_interfaces import utils as dfi_utils
 
 
 def get_model(model_name, pretrn=True):
@@ -115,6 +117,49 @@ def df_to_acc(dataset_name):
         y_preds_labels=True,
     )
     return acc_meter
+
+
+def filter_trn_tst_df(shifts, sel_classes, shifts_ds):
+    trn_df = {
+        constants.IMGFILE: [],
+        constants.LABEL: [],
+        constants.SHIFT: [],
+        constants.RHO: [],
+        constants.LOSS: [],
+        constants.LOSS: [],
+    }
+    tst_df = copy.deepcopy(trn_df)
+
+    for label, cls_name in enumerate(sel_classes):
+        for idx in range(10, 50):
+            sampled_shifts = np.random.choice(shifts, 2)
+            for ss in shifts:
+                shift_ds: dfi_utils.ImageNet_Star_Dataset = shifts_ds[ss]["ds"]
+                cache_ds: ds.DFRho = shifts_ds[ss]["cache"]
+                img_file: Path = (
+                    constants.imagenet_star_dir / ss / cls_name / f"{idx}.jpg"
+                )
+                assert img_file.exists(), "The image file does not exist"
+                rho_loss = cache_ds.get_item(image_file=img_file)
+                shift_rho = rho_loss[constants.CNF]
+                shift_loss = rho_loss[constants.LOSS]
+
+                tst_df[constants.IMGFILE].append(img_file)
+                tst_df[constants.LABEL].append(label)
+                tst_df[constants.SHIFT].append(ss)
+                tst_df[constants.RHO].append(shift_rho)
+                tst_df[constants.LOSS].append(shift_loss)
+
+                if ss in sampled_shifts:
+                    trn_df[constants.IMGFILE].append(img_file)
+                    trn_df[constants.LABEL].append(label)
+                    trn_df[constants.SHIFT].append(ss)
+                    trn_df[constants.RHO].append(shift_rho)
+                    trn_df[constants.LOSS].append(shift_loss)
+
+    trn_df = pd.DataFrame(trn_df)
+    tst_df = pd.DataFrame(tst_df)
+    return trn_df, tst_df
 
 
 def get_rec_datasets(shifts):

@@ -86,6 +86,10 @@ def set_logger(config: dict = None, log_dir: Path = None, log_file_name: str = N
     if log_file_name is None:
         log_file_name = f"{config[constants.EXPTNAME]}.log"
 
+    if log_file_name == "misc.log":
+        # Force log file mode to append
+        log_file_mode = "a"
+
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
 
@@ -119,6 +123,7 @@ def parse_args(args, unknown_args) -> dict:
             - Add first letter of rec_input to expt_name, rec_model_name
                 - In small case
                 - sorted
+            - If all trn_args is false, set expt_name to misc in append mode
     Args:
         args (_type_): _description_
         unknown_args (_type_): _description_
@@ -183,6 +188,10 @@ def parse_args(args, unknown_args) -> dict:
         expt_name = config[constants.EXPTNAME]
         expt_name = f"{expt_name}{sfx}"
         config[constants.EXPTNAME] = expt_name
+
+    trn_args: dict = config[constants.TRAIN_ARGS]
+    if sum(trn_args.values()) == 0:
+        config[constants.EXPTNAME] = "misc"
 
     # %% Config manipulations are done!
     dict_print(config)
