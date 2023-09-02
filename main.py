@@ -1,21 +1,10 @@
-from src import main_helper as mh
-import constants as constants
-import argparse
-
-import constants as constants
-from pathlib import Path
+# We must set cuda before any other imports.
 import os
-from utils import common_utils as cu
-import pandas as pd
-from src import models
-import numpy as np
-from src import dataset as ds
-import copy
-from src import rec_helper as rech
 
 os.environ["QT_QPA_PLATFORM"] = "offscreen"
 import argparse
 import config
+from utils import common_utils as cu
 
 config = config.config
 
@@ -23,6 +12,13 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--config", help="Use the correct argument", default="config.py")
 args, unknown_args = parser.parse_known_args()
 config = cu.parse_args(args, unknown_args)
+
+from src import main_helper as mh
+import argparse
+
+import constants as constants
+from src import models
+from src import rec_helper as rech
 
 cu.set_logger(config)
 constants.logger.info(f"Config: {cu.dict_print(config)}")
@@ -34,7 +30,7 @@ trn_args = config[constants.TRAIN_ARGS]
 shifts = config[constants.GENERAL_SPECS][constants.SHIFT]
 shifts_idx = [constants.shift_idx[entry] for entry in shifts]
 
-sel_classes = sorted(config[constants.DATASET_SPECS][constants.SEL_CLASSES])
+sel_sysnets = config[constants.DATASET_SPECS][constants.SEL_SYSNETS]
 
 rec_args = config[constants.REC_SPECS][constants.KWARGS]
 rec_model_name = config[constants.REC_SPECS][constants.MODEL_NAME]
@@ -58,7 +54,7 @@ shifts_ds: dict = mh.get_rec_datasets(shifts=shifts)
 rec_model: models.TarnetRecModel = models.TarnetRecModel(datasets=shifts_ds, **rec_args)
 
 trn_df, tst_df = mh.filter_trn_tst_df(
-    shifts=shifts, sel_classes=sel_classes, shifts_ds=shifts_ds
+    shifts=shifts, sel_sysnets=sel_sysnets, shifts_ds=shifts_ds
 )
 
 rec_dh = mh.get_rec_dh(
@@ -82,5 +78,4 @@ if trn_args[constants.REC] == True:
 
 else:
     rec_helper.load_model()
-    rec_acc = rec_helper.rec_acc(save_probs=False, dataset_split=constants.TST)
-    print(f"Rec acc: {rec_acc}")
+    rec_helper.evaluate_rec(save_probs=False, dataset_split=constants.TST)

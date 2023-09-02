@@ -113,18 +113,26 @@ class RecModel(nn.Module, ABC):
         self.shift_idxs = {shift: idx for idx, shift in enumerate(self.shifts)}
         self.num_shifts = len(self.shifts)
 
-        self.input: list = kwargs.get(constants.INPUT)
-        print(f"Input to the recourse model: {self.input}")
+        self.rec_input: list = kwargs.get(constants.INPUT)
+        print(f"Input to the recourse model: {self.rec_input}")
 
         self.embdim = kwargs.get(constants.EMBDIM, 64)
         self.shift_emb = Embedding(num_vocab=len(self.shifts), embdim=self.embdim)
         self.nn_arch = kwargs.get(constants.NN_ARCH, [128, 64])
 
-        self.resnet_50 = tv_models.resnet50(pretrained=True)
-        self.imgembdim = self.resnet_50.fc.in_features
-        self.resnet_50.fc = Identity()
-
-        self.all_dim = self.imgembdim + self.embdim
+        if "x" in self.rec_input:
+            self.resnet_50 = tv_models.resnet50(pretrained=True)
+            self.imgembdim = self.resnet_50.fc.in_features
+            self.resnet_50.fc = Identity()
+            self.all_dim = self.imgembdim + self.embdim
+        if constants.SSTAR in self.rec_input:
+            self.sstar_fnn = FNN(
+                in_dim=constants.SSTAR_DIM,
+                out_dim=self.embdim,
+                nn_arch=self.nn_arch,
+                prefix="sstar",
+            )
+            self.all_dim = self.embdim + self.embdim
 
         self.sm = nn.Softmax(dim=1)
         self.sigmoid = nn.Sigmoid()
@@ -327,6 +335,7 @@ class TarnetRecModel(RecModel):
         img: torch.Tensor,
         src_shift: list,
         rec_shift: list,
+        sstar: torch.Tensor = None,
     ):
         """Forward for the TARNET recourse model
 
@@ -336,7 +345,6 @@ class TarnetRecModel(RecModel):
             phi_x (torch.Tensor): embedding for the current image
             rec_beta_ids (torch.Tensor): the proposed beta recourse for the current image
         """
-        img_emb = self.resnet_50(img)
 
         src_shift_ids = [self.shift_idxs[entry] for entry in src_shift]
         src_shift_ids = torch.Tensor(src_shift_ids).long().to(cu.get_device())
@@ -345,7 +353,13 @@ class TarnetRecModel(RecModel):
         rec_shift_ids = torch.Tensor(rec_shift_ids).long().to(cu.get_device())
 
         shift_emb = self.shift_emb(src_shift_ids)
-        emb = torch.cat([img_emb, shift_emb], dim=1)
+        if "x" in self.rec_input:
+            img_emb = self.resnet_50(img)
+            emb = torch.cat([img_emb, shift_emb], dim=1)
+        if constants.SSTAR in self.rec_input:
+            assert sstar is not None, "sstar is None"
+            sstar_emb = self.sstar_fnn(sstar)
+            emb = torch.cat([sstar_emb, shift_emb], dim=1)
 
         out = torch.zeros(len(emb)).to(cu.get_device(), dtype=torch.float32)
         for _ in range(self.num_shifts):
@@ -370,6 +384,7 @@ class TarnetRecModel(RecModel):
         *,
         img: torch.Tensor,
         src_shift: list,
+        sstar: torch.Tensor = None,
     ):
         """Forward for the TARNET recourse model for all the rec_beta_ids
 
@@ -379,22 +394,15 @@ class TarnetRecModel(RecModel):
             phi_x (torch.Tensor): embedding for the current image
             rec_beta_ids (torch.Tensor): the proposed beta recourse for the current image
         """
-        img_emb = self.resnet_50(img)
 
-        src_shift_ids = [self.shift_idxs[entry] for entry in src_shift]
-        src_shift_ids = torch.Tensor(src_shift_ids).long().to(cu.get_device())
-
-        shift_emb = self.shift_emb(src_shift_ids)
-        emb = torch.cat([img_emb, shift_emb], dim=1)
-
-        out = torch.zeros(len(emb), self.num_shifts).to(
+        out = torch.zeros(len(src_shift), self.num_shifts).to(
             cu.get_device(), dtype=torch.float32
         )
 
         for idx, shift in enumerate(self.shifts):
-            rec_shifts = [shift] * len(emb)
+            rec_shifts = [shift] * len(src_shift)
             out[:, idx] += self.forward(
-                img=img, src_shift=src_shift, rec_shift=rec_shifts
+                img=img, src_shift=src_shift, rec_shift=rec_shifts, sstar=sstar
             )
 
         out = self.sigmoid(out)

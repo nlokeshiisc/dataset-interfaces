@@ -13,6 +13,7 @@ from tqdm import tqdm
 from utils import torch_data_utils as tdu
 from dataset_interfaces import utils as dsi_utils
 from dataset_interfaces import imagenet_utils as dsi_imutils
+from utils import torch_utils as tu
 
 
 class RecHelper:
@@ -26,28 +27,34 @@ class RecHelper:
         self.rec_model = rec_model
         self.rec_dh = rec_dh
         self.rec_model_name = rec_model_name
+        self.num_shifts = self.rec_model.num_shifts
 
-        self.sel_classes = kwargs.get(constants.SEL_CLASSES)
-        self.sel_classes = sorted(self.sel_classes)
+        self.sel_sysnets = kwargs.get(constants.SEL_SYSNETS)
+        self.sel_sysnets = sorted(self.sel_sysnets)
         self.cls_to_imgnet = {}
-        for _, c in enumerate(self.sel_classes):
+        for _, c in enumerate(self.sel_sysnets):
             self.cls_to_imgnet[_] = dsi_imutils.sysnet_to_clsid[c]
 
         constants.logger.info(
-            f"seld_classes: {self.sel_classes}, imagenet_ids: {self.cls_to_imgnet}"
+            f"seld_classes: {self.sel_sysnets}, imagenet_ids: {self.cls_to_imgnet}"
         )
-        print(f"seld_classes: {self.sel_classes}, imagenet_ids: {self.cls_to_imgnet}")
+        print(f"seld_classes: {self.sel_sysnets}, imagenet_ids: {self.cls_to_imgnet}")
 
         self.lr = kwargs.get(constants.LRN_RATE, 1e-4)
         self.checkpoints = kwargs.get(constants.CHECKPOINTS, [])
         self.ctr_lambda = kwargs.get(constants.CTR_LAMBDA, 0.1)
         self.enforce_ctrloss = kwargs.get(constants.ENFORCE_CTRLOSS, False)
+        self.rec_input = kwargs.get(constants.INPUT)
 
         constants.logger.info(f"rec_model_name: {self.rec_model_name}")
         print(f"rec_model_name: {self.rec_model_name}")
 
     def __str__(self) -> str:
         return f"{self.rec_model_name}"
+
+    @property
+    def _num_shifts(self) -> int:
+        return self.num_shifts
 
     @property
     def _xent_loss(self):
@@ -115,13 +122,18 @@ class RecHelper:
                     cu.get_device(), dtype=torch.float32
                 )
                 src_shifts = batch[constants.SHIFT]
+                sstar = None
+                if constants.SSTAR in self.rec_input:
+                    sstar = batch[constants.SSTAR].to(
+                        cu.get_device(), dtype=torch.float32
+                    )
 
                 if len(idxs) == 1:
                     tdu.batch_norm_off(self._model)
 
                 # For Factual model, src shift is the same as rec shift while training
                 rho_preds = self._model.forward(
-                    img=imgs, src_shift=src_shifts, rec_shift=src_shifts
+                    img=imgs, src_shift=src_shifts, rec_shift=src_shifts, sstar=sstar
                 )
 
                 fct_loss = self._mse_loss(rho_preds.squeeze(), rhos.squeeze())
@@ -163,6 +175,7 @@ class RecHelper:
             save_proba (bool, optional): _description_. Defaults to False.
             dataset_split (_type_, optional): _description_. Defaults to constants.TST.
         """
+        raise NotImplementedError()
         assert (
             dataset_split == constants.TST
         ), "we perform inference only on the test dataset"
@@ -214,6 +227,7 @@ class RecHelper:
             save_probs (bool, optional): _description_. Defaults to False.
             dataset_split (_type_, optional): _description_. Defaults to constants.TST.
         """
+        raise NotImplementedError()
         assert dataset_split == constants.TST
         rec_probs = self.get_rec_proba(
             save_probs=save_probs, dataset_split=dataset_split
@@ -221,7 +235,8 @@ class RecHelper:
         rec_conf, rec_labels = torch.max(rec_probs, dim=1)
         return rec_labels.detach().cpu()
 
-    def rec_acc(self, save_probs=False, dataset_split=constants.TST) -> float:
+    @torch.inference_mode()
+    def evaluate_rec(self, save_probs=False, dataset_split=constants.TST) -> float:
         """Computes the accuracy at 100% recourse for the real test dataset
 
         Args:
@@ -229,28 +244,58 @@ class RecHelper:
             dataset_split (_type_, optional): _description_. Defaults to constants.TST.
         """
         assert dataset_split == constants.TST, "only test dataset shall be recoursed"
-        real_pred_labels = self.cls_helper.predict_labels(
-            loader=self.cls_dh._tst_loader,
-            misc_name=constants.REAL_PREDS,
-            dataset_split=constants.TST,
-            save_probs=True,
+
+        if dataset_split == constants.TST:
+            loader = self.rec_dh._tst_loader
+
+        acc_meter = tu.AccuracyMeter(track=["acc"])
+        num_beta = self._num_shifts
+
+        self.rec_model.eval()
+        self.rec_model.to(cu.get_device(), dtype=torch.float32)
+
+        pbar = tqdm(loader, total=len(loader))
+        rho_preds = []
+        rhos = []
+        with torch.no_grad():
+            for idx, batch in pbar:
+                img = batch[constants.IMAGE].to(cu.get_device(), dtype=torch.float32)
+                label = batch[constants.LABEL].to(cu.get_device(), dtype=torch.float32)
+                rho = batch[constants.RHO].to(cu.get_device(), dtype=torch.float32)
+                src_shift = batch[constants.SHIFT]
+
+                sstar = None
+                if constants.SSTAR in self.rec_input:
+                    sstar = batch[constants.SSTAR].to(
+                        cu.get_device(), dtype=torch.float32
+                    )
+
+                rho_pred = self._model.forward_all_beta(
+                    img=img, src_shift=src_shift, sstar=sstar
+                )
+                rho_preds.append(rho_pred)
+                rhos.append(rho)
+
+        # For each z, b, b' what is the predicted rho
+        rho_preds = torch.cat(rho_preds, dim=0).view(-1, num_beta)
+
+        # For each z \times \cal{B} what is the true rho
+        rhos = torch.cat(rhos, dim=0).view(-1, num_beta)
+
+        # Repeat the true rho num_beta times to mimic the tru z, b, b' structure
+        rhos = rhos.repeat_interleave(num_beta, dim=0)
+
+        # Take the argmax shift
+        pred_max_shift = torch.argmax(rho_preds, dim=1)
+
+        # For the argmax shift, what is the true rho
+        rec_cnf = torch.gather(rhos, 1, pred_max_shift.view(-1, 1)).squeeze()
+
+        # If rec were optimal, what is the true rho
+        max_cnf, _ = torch.max(rhos, dim=1)
+
+        print(
+            f"Before Rec: {torch.mean(rhos).item()}, After Rec: {torch.mean(rec_cnf).item()}, max possible: {torch.mean(max_cnf).item()}"
         )
-        cls_tst_ds: ds.ClsDataset = self.cls_dh._tst_ds
-        num_beta = cls_tst_ds._num_betas
-
-        real_pred_labels = real_pred_labels.view(-1, num_beta)
-        real_pred_labels = torch.repeat_interleave(real_pred_labels, num_beta, dim=0)
-
-        real_gt_labels = torch.Tensor(cls_tst_ds._image_labels).long()
-
-        rec_beta_ids = self.get_rec_labels(
-            save_probs=True, dataset_split=dataset_split
-        ).view(-1, 1)
-
-        real_pred_labels = torch.gather(real_pred_labels, dim=1, index=rec_beta_ids)
-
-        rec_acc = torch.sum(
-            real_pred_labels.squeeze() == real_gt_labels.squeeze()
-        ).item() / len(real_pred_labels)
-
-        return rec_acc
+        print(f"Regret: {torch.mean(torch.abs(rec_cnf - max_cnf)).item()}")
+        pass

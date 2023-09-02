@@ -12,6 +12,7 @@ IMSTAR = "imagenet_star"
 # %% Imagenet constants
 imagenet_star_dir: Path = PROJ_DIR / "data/imagenet_star"
 MODELDIR = PROJ_DIR / "results/models"
+sstar_dir = Path("/raid/infolab/nlokesh/dataset-interfaces/tokens")
 
 BASE = "base"
 DUSK = "at_dusk"
@@ -76,7 +77,7 @@ seed: int = 0
 sw: SummaryWriter = None
 
 CLASSID = "class_id"
-SEL_CLASSES = "sel_classes"
+SEL_SYSNETS = "sel_sysnets"
 GPUID = "gpu_id"
 SEED = "seed"
 LOG_DIR = Path("results/logs")
@@ -170,6 +171,8 @@ NN_ARCH = "nn_arch"
 DELTA = "delta"
 IMGEMB = "imgemb"
 BETA = "beta"
+SSTAR = "sstar"
+SSTAR_DIM = 1024  # Dim of dsi tokens
 BETAID = "beta_id"
 GRP_RHO = "grp_rho"
 FINE_GRP_RHO = "fine_grp_rho"

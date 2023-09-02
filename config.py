@@ -6,7 +6,7 @@ config = {
     },
     constants.DATASET_SPECS: {
         constants.DATASET_NAME: constants.IMSTAR,
-        constants.SEL_CLASSES: [
+        constants.SEL_SYSNETS: [
             "n01514668",
             "n01560419",
             "n01630670",
@@ -24,11 +24,11 @@ config = {
         constants.KWARGS: {
             constants.IMGEMBDIM: 256,
             constants.EMBDIM: 64,
-            constants.INPUT: ["x", constants.BETA],
+            constants.INPUT: [constants.SSTAR, constants.BETA],
             constants.EPOCHS: 20,
         },
     },
-    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: False, constants.REC: True},
+    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: False, constants.REC: False},
     constants.SEED: 0,
     constants.GPUID: 1,
     constants.EXPTNAME: "fct",

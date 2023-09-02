@@ -15,6 +15,7 @@ from src import data_helper as dh
 from pathlib import Path
 import copy
 from dataset_interfaces import utils as dfi_utils
+from dataset_interfaces import imagenet_utils as dfi_imutils
 
 
 def get_model(model_name, pretrn=True):
@@ -29,6 +30,29 @@ def get_ds_dl(dataset_name, loader=True):
         path=constants.imagenet_star_dir,
         shift=dataset_name,
         # mask_path=constants.imagenet_star_dir / "masks.npy",
+        transform=constants.RESNET_TRANSFORMS[constants.TST],
+    )
+    if loader == False:
+        return ds
+
+    # Create dataloader
+    dl = DataLoader(ds, batch_size=32, shuffle=False, num_workers=4)
+    return ds, dl
+
+
+def get_cls_ds(data_dir, loader=False):
+    """Creates a dataset given some arbitrary directory
+
+    Args:
+        data_dir (_type_): _description_
+        loader (bool, optional): _description_. Defaults to False.
+
+    Returns:
+        _type_: _description_
+    """
+    ds = utils.ImageNet_Star_Dataset(
+        path=data_dir,
+        shift="",
         transform=constants.RESNET_TRANSFORMS[constants.TST],
     )
     if loader == False:
@@ -111,15 +135,11 @@ def df_to_acc(dataset_name):
     acc_meter.reset()
     true_labels = df["true"].values
     pred_labels = df["pred"].values
-    acc_meter.update(
-        y_preds=torch.Tensor(pred_labels),
-        y=torch.Tensor(true_labels),
-        y_preds_labels=True,
-    )
+    acc_meter.update(y_preds=torch.Tensor(pred_labels), y=torch.Tensor(true_labels))
     return acc_meter
 
 
-def filter_trn_tst_df(shifts, sel_classes, shifts_ds):
+def filter_trn_tst_df(shifts, sel_sysnets, shifts_ds):
     trn_df = {
         constants.IMGFILE: [],
         constants.LABEL: [],
@@ -130,7 +150,7 @@ def filter_trn_tst_df(shifts, sel_classes, shifts_ds):
     }
     tst_df = copy.deepcopy(trn_df)
 
-    for label, cls_name in enumerate(sel_classes):
+    for label, cls_name in enumerate(sel_sysnets):
         for idx in range(10, 50):
             sampled_shifts = np.random.choice(shifts, 2)
             for ss in shifts:
@@ -167,7 +187,6 @@ def get_rec_datasets(shifts):
 
     Args:
         shifts (_type_): _description_
-        sel_classes (_type_): _description_
     """
     shifts_ds: dict = {}
     for shift in shifts:
@@ -208,24 +227,49 @@ def check_df_acc(shifts):
     pass
 
 
-def get_rec_dh(trn_df, tst_df, **kwargs):
+def get_rec_dh(*, trn_df, tst_df, **kwargs):
+    """Gets the rec_dh
+
+    Args:
+        trn_df (_type_): _description_
+        tst_df (_type_): _description_
+        sel_sysnets (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    sel_sysnets = kwargs.get(constants.SEL_SYSNETS)
+    rec_input = kwargs.get(constants.INPUT)
+    if constants.SSTAR in rec_input:
+        cls_ids = [dfi_imutils.sysnet_to_clsid[sysnet] for sysnet in sel_sysnets]
+        print(f"Loading sstar for classes: {cls_ids}")
+        sstar_embs = []
+        for idx in cls_ids:
+            sstar = torch.load(constants.sstar_dir / f"{idx}.bin")
+            sstar_embs.append(sstar.view(1, -1))
+        sstar_embs = torch.cat(sstar_embs, dim=0)
+        kwargs[constants.SSTAR] = sstar_embs
+
     rec_trn_ds = ds.DfDataset(
         dataset_name=constants.IMSTAR,
         dataset_split=constants.TRN,
         df=trn_df,
         transform=constants.RESNET_TRANSFORMS[constants.TRN],
+        **kwargs,
     )
     rec_trntst_ds = ds.DfDataset(
         dataset_name=constants.IMSTAR,
         dataset_split=constants.TRNTST,
         df=trn_df,
         transform=constants.RESNET_TRANSFORMS[constants.TRNTST],
+        **kwargs,
     )
     rec_tst_ds = ds.DfDataset(
         dataset_name=constants.IMSTAR,
         dataset_split=constants.TST,
         df=tst_df,
         transform=constants.RESNET_TRANSFORMS[constants.TST],
+        **kwargs,
     )
     rec_dh = dh.RecDataHelper(
         dataset_name=constants.IMSTAR,

@@ -31,6 +31,14 @@ class AbsDataset(Dataset, ABC):
 
         self.transform = transform
         self.classes = np.unique(self.labels)
+
+        self.sstar_emb = None
+        self.rec_input = kwargs.get(constants.INPUT)
+        if constants.SSTAR in self.rec_input:
+            self.sstar_emb = kwargs.get(constants.SSTAR)
+        pass
+
+    def load_sstarembs(self):
         pass
 
     @property
@@ -136,7 +144,7 @@ class DfDataset(AbsDataset):
         image_rho = self._rho[idx]
         image_loss = self._loss[idx]
 
-        return idx, {
+        item_dict = {
             constants.IMGFILE: image_file,
             constants.IMAGE: image,
             constants.LABEL: image_label,
@@ -144,6 +152,11 @@ class DfDataset(AbsDataset):
             constants.RHO: image_rho,
             constants.LOSS: image_loss,
         }
+
+        if constants.SSTAR in self.rec_input:
+            item_dict[constants.SSTAR] = self.sstar_emb[image_label]
+
+        return idx, item_dict
 
 
 class DFRho(Dataset):

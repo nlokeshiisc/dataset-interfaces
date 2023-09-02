@@ -114,7 +114,7 @@ def parse_args(args, unknown_args) -> dict:
     """This API is a facade for all the code modulated changes that are to be made to the config.
     The following rules are followed that automatically applies changes to the config:
         1. If dataset is imagenet_star
-            - If len(sel_classes) < 1000
+            - If len(sel_sysnets) < 1000
                 - Add sub to expt_name, rec_model_name
             - If shift is light_shifts
                 - Add light to expt_name, rec_model_name
@@ -133,17 +133,22 @@ def parse_args(args, unknown_args) -> dict:
     """
     config = __load_config_file(args, unknown_args)
 
-    config[constants.REC_SPECS][constants.KWARGS][constants.SEL_CLASSES] = config[
+    # Sort the selected sysnets to be consistent
+    config[constants.DATASET_SPECS][constants.SEL_SYSNETS] = sorted(
+        config[constants.DATASET_SPECS][constants.SEL_SYSNETS]
+    )
+
+    config[constants.REC_SPECS][constants.KWARGS][constants.SEL_SYSNETS] = config[
         constants.DATASET_SPECS
-    ][constants.SEL_CLASSES]
+    ][constants.SEL_SYSNETS]
 
     # %% Manipulate the model name and expt name based on the config
     sfx = ""
     dataset_name = config[constants.DATASET_SPECS][constants.DATASET_NAME]
     if dataset_name == constants.IMSTAR:
         # Sel classes
-        sel_classes = config[constants.DATASET_SPECS][constants.SEL_CLASSES]
-        if len(sel_classes) < 1000:
+        sel_sysnets = config[constants.DATASET_SPECS][constants.SEL_SYSNETS]
+        if len(sel_sysnets) < 1000:
             sfx = f"{sfx}-sub"
 
         # Shifts
@@ -178,6 +183,8 @@ def parse_args(args, unknown_args) -> dict:
         if len(rec_input) == 2:
             if "x" in rec_input and constants.BETA in rec_input:
                 sfx = f"{sfx}-xbeta"
+            elif constants.SSTAR in rec_input and constants.BETA in rec_input:
+                sfx = f"{sfx}-sstarbeta"
 
         # Change the rec_model_name
         rec_model_name = config[constants.REC_SPECS][constants.MODEL_NAME]
