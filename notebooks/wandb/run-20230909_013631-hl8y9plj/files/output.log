@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1112, in run_textual_inversion_plus
+    "loss_2": loss_2.cpu(),
+AttributeError: 'int' object has no attribute 'cpu'

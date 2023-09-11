@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1037, in run_textual_inversion_plus
+    vae.encode(batch["pixel_values"]).latent_dist.sample().detach()
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/utils/accelerate_utils.py", line 46, in wrapper
+    return method(self, *args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/models/autoencoder_kl.py", line 242, in encode
+    h = self.encoder(x)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/models/vae.py", line 111, in forward
+    sample = self.conv_in(sample)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 463, in forward
+    return self._conv_forward(input, self.weight, self.bias)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/conv.py", line 459, in _conv_forward
+    return F.conv2d(input, weight, bias, self.stride,
+RuntimeError: Input type (float) and bias type (c10::Half) should be the same

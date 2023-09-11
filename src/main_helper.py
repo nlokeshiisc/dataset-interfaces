@@ -24,13 +24,14 @@ def get_model(model_name, pretrn=True):
     return model
 
 
-def get_ds_dl(dataset_name, loader=True):
+def get_ds_dl(dataset_name, loader=True, object_z_id = None):
     print(f"Loading dataset: {dataset_name}")
     ds = utils.ImageNet_Star_Dataset(
         path=constants.imagenet_star_dir,
         shift=dataset_name,
         # mask_path=constants.imagenet_star_dir / "masks.npy",
         transform=constants.RESNET_TRANSFORMS[constants.TST],
+        object_z_id=object_z_id
     )
     if loader == False:
         return ds
@@ -100,6 +101,7 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, cache=False):
 
         if cache == True:
             shift = loader.dataset.shift
+            object_z_id = loader.dataset.object_z_id
             true_labels = torch.cat(true_labels).numpy()
             pred_labels = torch.cat(pred_labels).numpy()
             image_files = list(itertools.chain(*image_files))
@@ -116,7 +118,7 @@ def evaluate_model(model: torch.nn.Module, loader: DataLoader, cache=False):
                 }
             )
             df.to_csv(
-                constants.PROJ_DIR / "cache" / f"{shift}_preds.csv",
+                constants.PROJ_DIR / "cache" / f"{shift}_{object_z_id}_preds.csv",
                 index=False,
             )
 

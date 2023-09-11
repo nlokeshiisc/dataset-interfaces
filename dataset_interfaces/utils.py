@@ -77,8 +77,12 @@ class SplitEmbedding(nn.Module):
 
 
 class ImageNet_Star_Dataset(ImageFolder):
-    def __init__(self, path, shift, mask_path=None, transform=None):
-        super().__init__(os.path.join(path, shift), transform=transform)
+    def __init__(self, path, shift, mask_path=None, transform=None, object_z_id = None):
+        if object_z_id is None:
+            super().__init__(os.path.join(path, shift), transform=transform)
+        else:
+            super().__init__(os.path.join(path, shift, object_z_id), transform=transform)
+
 
         # In this repo we also provide masks for each distribution shift indicating which images
         # we filter out with our CLIP metrics, at masks.npy.

@@ -1,0 +1,22 @@
+vae/diffusion_pytorch_model.safetensors not found
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  8.85it/s]
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  9.64it/s]
+
+
+
+
+
+
+
+Traceback (most recent call last):████████████████████████████████████████████████████████████████████████████████████| 50/50 [00:14<00:00,  3.43it/s]
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1114, in run_textual_inversion_plus
+    accelerator.backward(loss)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/accelerate/accelerator.py", line 1851, in backward
+    self.scaler.scale(loss).backward(**kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: expected scalar type Float but found Half

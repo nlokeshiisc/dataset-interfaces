@@ -1,0 +1,27 @@
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_setup.py:_flush():76] Current SDK version is 0.15.10
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_setup.py:_flush():76] Configure stats pid to 2617375
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_setup.py:_flush():76] Loading settings from /raid/infolab/nlokesh/.config/wandb/settings
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_setup.py:_flush():76] Loading settings from /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/settings
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_init.py:_log_setup():524] Logging user logs to /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230907_231818-efkec4xt/logs/debug.log
+2023-09-07 23:18:18,886 INFO    MainThread:2617375 [wandb_init.py:_log_setup():525] Logging internal logs to /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230907_231818-efkec4xt/logs/debug-internal.log
+2023-09-07 23:18:18,887 INFO    MainThread:2617375 [wandb_init.py:init():564] calling init triggers
+2023-09-07 23:18:18,887 INFO    MainThread:2617375 [wandb_init.py:init():571] wandb.init called with sweep_config: {}
+config: {}
+2023-09-07 23:18:18,887 INFO    MainThread:2617375 [wandb_init.py:init():589] re-initializing run, found existing run on stack: 5ob39ttx
+2023-09-07 23:18:18,888 INFO    MainThread:2617375 [wandb_run.py:_finish():1934] finishing run pringlesinghal/Textual Inversion Plus/5ob39ttx
+2023-09-07 23:18:18,888 ERROR   MainThread:2617375 [jupyter.py:save_history():437] Run pip install nbformat to save notebook history
+2023-09-07 23:18:18,888 INFO    MainThread:2617375 [jupyter.py:save_ipynb():373] not saving jupyter notebook
+2023-09-07 23:18:18,888 INFO    MainThread:2617375 [wandb_init.py:_jupyter_teardown():452] cleaning up jupyter logic
+2023-09-07 23:18:18,889 INFO    MainThread:2617375 [wandb_run.py:_atexit_cleanup():2168] got exitcode: 0
+2023-09-07 23:18:18,889 INFO    MainThread:2617375 [wandb_run.py:_restore():2151] restore
+2023-09-07 23:18:18,889 INFO    MainThread:2617375 [wandb_run.py:_restore():2157] restore done
+2023-09-07 23:19:41,650 INFO    MainThread:2617375 [wandb_init.py:init():614] starting backend
+2023-09-07 23:19:41,650 INFO    MainThread:2617375 [wandb_init.py:init():618] setting up manager
+2023-09-07 23:19:41,652 INFO    MainThread:2617375 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2023-09-07 23:19:41,652 INFO    MainThread:2617375 [wandb_init.py:init():624] backend started and connected
+2023-09-07 23:19:41,655 INFO    MainThread:2617375 [wandb_run.py:_label_probe_notebook():1276] probe notebook
+2023-09-07 23:19:41,655 INFO    MainThread:2617375 [wandb_run.py:_label_probe_notebook():1286] Unable to probe notebook: 'NoneType' object has no attribute 'get'
+2023-09-07 23:19:41,655 INFO    MainThread:2617375 [wandb_init.py:init():715] updated telemetry
+2023-09-07 23:19:41,659 INFO    MainThread:2617375 [wandb_init.py:init():748] communicating run to backend with 90.0 second timeout

@@ -1,0 +1,29 @@
+batch["input_ids_list"][batch["true_beta_index"]].dtype=torch.int64
+text_encoder.dtype=torch.float32
+encoder_hidden_states=tensor([[[-0.3135, -0.4476, -0.0083,  ...,  0.2543, -0.0324, -0.2961],
+         [ 0.1996, -1.6932, -0.8948,  ...,  0.4660, -0.0955, -2.1478],
+         [ 0.7587, -1.4147, -0.4924,  ...,  0.7316, -2.8812, -0.5549],
+         ...,
+         [ 0.7739, -1.9805,  0.0547,  ..., -0.2702,  0.1329,  0.3716],
+         [ 0.8025, -1.9687,  0.0510,  ..., -0.5339,  0.0703,  0.4751],
+         [ 0.8089, -2.5496, -0.7819,  ..., -0.2937,  0.1875,  0.8043]]],
+       device='cuda:0', grad_fn=<NativeLayerNormBackward0>)
+unet/diffusion_pytorch_model.safetensors not found
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  6.58it/s]
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  5.75it/s]
+
+
+Traceback (most recent call last):█████████████████████████████▊                                                      | 26/50 [00:05<00:05,  4.77it/s]
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1098, in run_textual_inversion_plus
+    loss_2 = clip_contrastive_loss(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 616, in clip_contrastive_loss
+    results = pipe(prompts, **cmd_args)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion.py", line 789, in __call__
+    latents = self.scheduler.step(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/schedulers/scheduling_euler_discrete.py", line 371, in step
+    step_index = (self.timesteps == timestep).nonzero().item()
+KeyboardInterrupt

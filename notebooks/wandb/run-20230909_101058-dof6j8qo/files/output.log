@@ -1,0 +1,51 @@
+unet/diffusion_pytorch_model.safetensors not found
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  5.31it/s]
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  5.26it/s]
+
+
+
+
+
+
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 50/50 [00:10<00:00,  4.76it/s]
+loss_1.dtype=torch.float32
+loss_2.dtype=torch.float32
+/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/autograd/__init__.py:200: UserWarning: Error detected in NativeLayerNormBackward0. Traceback of forward call that caused the error:
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1060, in run_textual_inversion_plus
+    encoder_hidden_states = text_encoder(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/accelerate/utils/operations.py", line 581, in forward
+    return model_forward(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/accelerate/utils/operations.py", line 569, in __call__
+    return convert_to_fp32(self.model_forward(*args, **kwargs))
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/amp/autocast_mode.py", line 14, in decorate_autocast
+    return func(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/transformers/models/clip/modeling_clip.py", line 823, in forward
+    return self.text_model(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/transformers/models/clip/modeling_clip.py", line 751, in forward
+    last_hidden_state = self.final_layer_norm(last_hidden_state)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/normalization.py", line 190, in forward
+    return F.layer_norm(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/functional.py", line 2515, in layer_norm
+    return torch.layer_norm(input, normalized_shape, weight, bias, eps, torch.backends.cudnn.enabled)
+ (Triggered internally at /opt/conda/conda-bld/pytorch_1682343967769/work/torch/csrc/autograd/python_anomaly_mode.cpp:114.)
+  Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+Traceback (most recent call last):
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1119, in run_textual_inversion_plus
+    accelerator.backward(loss)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/accelerate/accelerator.py", line 1851, in backward
+    self.scaler.scale(loss).backward(**kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+RuntimeError: expected scalar type Float but found Half

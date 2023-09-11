@@ -1,0 +1,27 @@
+vae/diffusion_pytorch_model.safetensors not found
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  5.24it/s]
+  0%|                                                                                                                          | 0/50 [00:00<?, ?it/s]
+Traceback (most recent call last):                                                                                             | 0/50 [00:00<?, ?it/s]
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 135, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1096, in run_textual_inversion_plus
+    loss_2 = clip_contrastive_loss(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 616, in clip_contrastive_loss
+    results = pipe(prompts, **cmd_args)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/pipelines/stable_diffusion/pipeline_stable_diffusion.py", line 767, in __call__
+    noise_pred = self.unet(
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/models/unet_2d_condition.py", line 814, in forward
+    emb = self.time_embedding(t_emb, timestep_cond)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/diffusers/models/embeddings.py", line 192, in forward
+    sample = self.linear_1(sample)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/raid/infolab/nlokesh/anaconda3/envs/dsi/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 114, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: mat1 and mat2 must have the same dtype

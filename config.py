@@ -28,7 +28,7 @@ config = {
             constants.EPOCHS: 20,
         },
     },
-    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: False, constants.REC: False},
+    constants.TRAIN_ARGS: {constants.COMPUTE_RHO: True, constants.REC: False},
     constants.SEED: 0,
     constants.GPUID: 1,
     constants.EXPTNAME: "fct",

@@ -10,7 +10,7 @@ PROJ_DIR = Path(".").absolute()
 IMSTAR = "imagenet_star"
 
 # %% Imagenet constants
-imagenet_star_dir: Path = PROJ_DIR / "data/imagenet_star"
+imagenet_star_dir: Path = PROJ_DIR / "dataset-interfaces/data/imagenet_star"
 MODELDIR = PROJ_DIR / "results/models"
 sstar_dir = Path("/raid/infolab/nlokesh/dataset-interfaces/tokens")
 

@@ -1,0 +1,202 @@
+2023-09-09 01:23:29,850 INFO    StreamThr :289313 [internal.py:wandb_internal():86] W&B internal server running at pid: 289313, started at: 2023-09-09 01:23:29.849402
+2023-09-09 01:23:29,851 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status
+2023-09-09 01:23:29,853 INFO    WriterThread:289313 [datastore.py:open_for_write():85] open: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/run-qvt13qxg.wandb
+2023-09-09 01:23:29,853 DEBUG   SenderThread:289313 [sender.py:send():379] send: header
+2023-09-09 01:23:29,856 DEBUG   SenderThread:289313 [sender.py:send():379] send: run
+2023-09-09 01:23:30,614 INFO    SenderThread:289313 [dir_watcher.py:__init__():211] watching files in: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files
+2023-09-09 01:23:30,615 INFO    SenderThread:289313 [sender.py:_start_run_threads():1121] run started: qvt13qxg with start time 1694202809.849358
+2023-09-09 01:23:30,620 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: check_version
+2023-09-09 01:23:30,620 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: check_version
+2023-09-09 01:23:30,676 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: run_start
+2023-09-09 01:23:30,688 DEBUG   HandlerThread:289313 [system_info.py:__init__():32] System info init
+2023-09-09 01:23:30,688 DEBUG   HandlerThread:289313 [system_info.py:__init__():47] System info init done
+2023-09-09 01:23:30,688 INFO    HandlerThread:289313 [system_monitor.py:start():181] Starting system monitor
+2023-09-09 01:23:30,689 INFO    SystemMonitor:289313 [system_monitor.py:_start():145] Starting system asset monitoring threads
+2023-09-09 01:23:30,689 INFO    HandlerThread:289313 [system_monitor.py:probe():201] Collecting system info
+2023-09-09 01:23:30,690 INFO    SystemMonitor:289313 [interfaces.py:start():190] Started cpu monitoring
+2023-09-09 01:23:30,690 INFO    SystemMonitor:289313 [interfaces.py:start():190] Started disk monitoring
+2023-09-09 01:23:30,691 INFO    SystemMonitor:289313 [interfaces.py:start():190] Started gpu monitoring
+2023-09-09 01:23:30,691 INFO    SystemMonitor:289313 [interfaces.py:start():190] Started memory monitoring
+2023-09-09 01:23:30,691 INFO    SystemMonitor:289313 [interfaces.py:start():190] Started network monitoring
+2023-09-09 01:23:30,797 DEBUG   HandlerThread:289313 [system_info.py:probe():196] Probing system
+2023-09-09 01:23:30,799 DEBUG   HandlerThread:289313 [system_info.py:_probe_git():181] Probing git
+2023-09-09 01:23:30,803 DEBUG   HandlerThread:289313 [system_info.py:_probe_git():189] Probing git done
+2023-09-09 01:23:30,803 DEBUG   HandlerThread:289313 [system_info.py:probe():244] Probing system done
+2023-09-09 01:23:30,803 DEBUG   HandlerThread:289313 [system_monitor.py:probe():210] {'os': 'Linux-5.4.0-146-generic-x86_64-with-glibc2.31', 'python': '3.10.12', 'heartbeatAt': '2023-09-08T19:53:30.797303', 'startedAt': '2023-09-08T19:53:29.845100', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py', 'codePathLocal': 'Extract_Better_Embeds.py', 'codePath': 'notebooks/Extract_Better_Embeds.py', 'git': {'remote': 'git@github.com:nlokeshiisc/dataset-interfaces.git', 'commit': '98c16c3f026d5ffb2fd38ad75afb8f6573d5ad8e'}, 'email': 'nlokeshiisc@gmail.com', 'root': '/raid/infolab/nlokesh/dataset-interfaces', 'host': 'iitb-dgx2.iitb.ac.in', 'username': 'nlokesh', 'executable': '/raid/infolab/nlokesh/anaconda3/envs/dsi/bin/python', 'cpu_count': 128, 'cpu_count_logical': 256, 'cpu_freq': {'current': 2.8964570312499984, 'min': 1500.0, 'max': 2250.0}, 'cpu_freq_per_core': [{'current': 2.615, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.374, 'min': 1500.0, 'max': 2250.0}, {'current': 3.381, 'min': 1500.0, 'max': 2250.0}, {'current': 2.596, 'min': 1500.0, 'max': 2250.0}, {'current': 3.383, 'min': 1500.0, 'max': 2250.0}, {'current': 2.595, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 2.601, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 3.382, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.385, 'min': 1500.0, 'max': 2250.0}, {'current': 3.381, 'min': 1500.0, 'max': 2250.0}, {'current': 3.393, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.398, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 2.583, 'min': 1500.0, 'max': 2250.0}, {'current': 3.382, 'min': 1500.0, 'max': 2250.0}, {'current': 3.378, 'min': 1500.0, 'max': 2250.0}, {'current': 3.393, 'min': 1500.0, 'max': 2250.0}, {'current': 3.125, 'min': 1500.0, 'max': 2250.0}, {'current': 3.118, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.208, 'min': 1500.0, 'max': 2250.0}, {'current': 3.393, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.378, 'min': 1500.0, 'max': 2250.0}, {'current': 3.127, 'min': 1500.0, 'max': 2250.0}, {'current': 3.128, 'min': 1500.0, 'max': 2250.0}, {'current': 2.534, 'min': 1500.0, 'max': 2250.0}, {'current': 3.23, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 2.45, 'min': 1500.0, 'max': 2250.0}, {'current': 2.578, 'min': 1500.0, 'max': 2250.0}, {'current': 3.382, 'min': 1500.0, 'max': 2250.0}, {'current': 2.536, 'min': 1500.0, 'max': 2250.0}, {'current': 2.204, 'min': 1500.0, 'max': 2250.0}, {'current': 3.38, 'min': 1500.0, 'max': 2250.0}, {'current': 3.383, 'min': 1500.0, 'max': 2250.0}, {'current': 3.384, 'min': 1500.0, 'max': 2250.0}, {'current': 2.634, 'min': 1500.0, 'max': 2250.0}, {'current': 3.398, 'min': 1500.0, 'max': 2250.0}, {'current': 3.36, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 2.62, 'min': 1500.0, 'max': 2250.0}, {'current': 3.393, 'min': 1500.0, 'max': 2250.0}, {'current': 2.575, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 2.616, 'min': 1500.0, 'max': 2250.0}, {'current': 2.621, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 2.206, 'min': 1500.0, 'max': 2250.0}, {'current': 2.116, 'min': 1500.0, 'max': 2250.0}, {'current': 3.074, 'min': 1500.0, 'max': 2250.0}, {'current': 2.605, 'min': 1500.0, 'max': 2250.0}, {'current': 2.615, 'min': 1500.0, 'max': 2250.0}, {'current': 2.548, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 2.535, 'min': 1500.0, 'max': 2250.0}, {'current': 3.381, 'min': 1500.0, 'max': 2250.0}, {'current': 2.551, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 1.69, 'min': 1500.0, 'max': 2250.0}, {'current': 2.266, 'min': 1500.0, 'max': 2250.0}, {'current': 2.544, 'min': 1500.0, 'max': 2250.0}, {'current': 2.335, 'min': 1500.0, 'max': 2250.0}, {'current': 2.268, 'min': 1500.0, 'max': 2250.0}, {'current': 3.38, 'min': 1500.0, 'max': 2250.0}, {'current': 2.56, 'min': 1500.0, 'max': 2250.0}, {'current': 2.407, 'min': 1500.0, 'max': 2250.0}, {'current': 1.754, 'min': 1500.0, 'max': 2250.0}, {'current': 2.312, 'min': 1500.0, 'max': 2250.0}, {'current': 1.748, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.372, 'min': 1500.0, 'max': 2250.0}, {'current': 3.396, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 2.354, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 2.259, 'min': 1500.0, 'max': 2250.0}, {'current': 2.274, 'min': 1500.0, 'max': 2250.0}, {'current': 3.403, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 2.358, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 2.333, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.402, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 2.335, 'min': 1500.0, 'max': 2250.0}, {'current': 3.38, 'min': 1500.0, 'max': 2250.0}, {'current': 3.378, 'min': 1500.0, 'max': 2250.0}, {'current': 3.398, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 2.333, 'min': 1500.0, 'max': 2250.0}, {'current': 2.251, 'min': 1500.0, 'max': 2250.0}, {'current': 3.374, 'min': 1500.0, 'max': 2250.0}, {'current': 2.343, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 3.398, 'min': 1500.0, 'max': 2250.0}, {'current': 2.275, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 3.384, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 3.377, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 2.286, 'min': 1500.0, 'max': 2250.0}, {'current': 2.273, 'min': 1500.0, 'max': 2250.0}, {'current': 3.404, 'min': 1500.0, 'max': 2250.0}, {'current': 2.804, 'min': 1500.0, 'max': 2250.0}, {'current': 2.279, 'min': 1500.0, 'max': 2250.0}, {'current': 3.385, 'min': 1500.0, 'max': 2250.0}, {'current': 3.401, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 3.393, 'min': 1500.0, 'max': 2250.0}, {'current': 2.587, 'min': 1500.0, 'max': 2250.0}, {'current': 2.593, 'min': 1500.0, 'max': 2250.0}, {'current': 3.398, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 2.594, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 1.995, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.384, 'min': 1500.0, 'max': 2250.0}, {'current': 2.608, 'min': 1500.0, 'max': 2250.0}, {'current': 3.37, 'min': 1500.0, 'max': 2250.0}, {'current': 2.628, 'min': 1500.0, 'max': 2250.0}, {'current': 2.696, 'min': 1500.0, 'max': 2250.0}, {'current': 2.658, 'min': 1500.0, 'max': 2250.0}, {'current': 2.638, 'min': 1500.0, 'max': 2250.0}, {'current': 3.395, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 2.571, 'min': 1500.0, 'max': 2250.0}, {'current': 3.382, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.395, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 3.396, 'min': 1500.0, 'max': 2250.0}, {'current': 2.602, 'min': 1500.0, 'max': 2250.0}, {'current': 3.397, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 2.579, 'min': 1500.0, 'max': 2250.0}, {'current': 2.037, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.381, 'min': 1500.0, 'max': 2250.0}, {'current': 3.396, 'min': 1500.0, 'max': 2250.0}, {'current': 2.612, 'min': 1500.0, 'max': 2250.0}, {'current': 2.579, 'min': 1500.0, 'max': 2250.0}, {'current': 2.209, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.403, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 2.955, 'min': 1500.0, 'max': 2250.0}, {'current': 2.628, 'min': 1500.0, 'max': 2250.0}, {'current': 2.168, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 1.968, 'min': 1500.0, 'max': 2250.0}, {'current': 1.934, 'min': 1500.0, 'max': 2250.0}, {'current': 3.385, 'min': 1500.0, 'max': 2250.0}, {'current': 2.575, 'min': 1500.0, 'max': 2250.0}, {'current': 3.395, 'min': 1500.0, 'max': 2250.0}, {'current': 2.599, 'min': 1500.0, 'max': 2250.0}, {'current': 2.57, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 2.245, 'min': 1500.0, 'max': 2250.0}, {'current': 2.244, 'min': 1500.0, 'max': 2250.0}, {'current': 2.322, 'min': 1500.0, 'max': 2250.0}, {'current': 2.607, 'min': 1500.0, 'max': 2250.0}, {'current': 2.614, 'min': 1500.0, 'max': 2250.0}, {'current': 2.6, 'min': 1500.0, 'max': 2250.0}, {'current': 2.684, 'min': 1500.0, 'max': 2250.0}, {'current': 2.548, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 2.51, 'min': 1500.0, 'max': 2250.0}, {'current': 3.396, 'min': 1500.0, 'max': 2250.0}, {'current': 1.69, 'min': 1500.0, 'max': 2250.0}, {'current': 2.265, 'min': 1500.0, 'max': 2250.0}, {'current': 2.655, 'min': 1500.0, 'max': 2250.0}, {'current': 2.359, 'min': 1500.0, 'max': 2250.0}, {'current': 2.294, 'min': 1500.0, 'max': 2250.0}, {'current': 3.383, 'min': 1500.0, 'max': 2250.0}, {'current': 2.515, 'min': 1500.0, 'max': 2250.0}, {'current': 2.385, 'min': 1500.0, 'max': 2250.0}, {'current': 1.752, 'min': 1500.0, 'max': 2250.0}, {'current': 2.319, 'min': 1500.0, 'max': 2250.0}, {'current': 1.752, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 3.38, 'min': 1500.0, 'max': 2250.0}, {'current': 3.401, 'min': 1500.0, 'max': 2250.0}, {'current': 2.355, 'min': 1500.0, 'max': 2250.0}, {'current': 3.401, 'min': 1500.0, 'max': 2250.0}, {'current': 2.297, 'min': 1500.0, 'max': 2250.0}, {'current': 2.279, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 3.405, 'min': 1500.0, 'max': 2250.0}, {'current': 3.398, 'min': 1500.0, 'max': 2250.0}, {'current': 2.385, 'min': 1500.0, 'max': 2250.0}, {'current': 3.397, 'min': 1500.0, 'max': 2250.0}, {'current': 3.377, 'min': 1500.0, 'max': 2250.0}, {'current': 3.383, 'min': 1500.0, 'max': 2250.0}, {'current': 2.383, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.4, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 3.382, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 3.379, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.381, 'min': 1500.0, 'max': 2250.0}, {'current': 3.386, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 3.394, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.377, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.378, 'min': 1500.0, 'max': 2250.0}, {'current': 3.39, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.392, 'min': 1500.0, 'max': 2250.0}, {'current': 3.399, 'min': 1500.0, 'max': 2250.0}, {'current': 3.383, 'min': 1500.0, 'max': 2250.0}, {'current': 3.401, 'min': 1500.0, 'max': 2250.0}, {'current': 3.388, 'min': 1500.0, 'max': 2250.0}, {'current': 3.391, 'min': 1500.0, 'max': 2250.0}, {'current': 3.389, 'min': 1500.0, 'max': 2250.0}, {'current': 3.387, 'min': 1500.0, 'max': 2250.0}], 'disk': {'/': {'total': 195.67875289916992, 'used': 48.46276092529297}}, 'gpu': 'NVIDIA A100-SXM4-80GB', 'gpu_count': 8, 'gpu_devices': [{'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}, {'name': 'NVIDIA A100-SXM4-80GB', 'memory_total': 85198045184}], 'memory': {'total': 2015.6842994689941}}
+2023-09-09 01:23:30,804 INFO    HandlerThread:289313 [system_monitor.py:probe():211] Finished collecting system info
+2023-09-09 01:23:30,804 INFO    HandlerThread:289313 [system_monitor.py:probe():214] Publishing system info
+2023-09-09 01:23:30,804 DEBUG   HandlerThread:289313 [system_info.py:_save_pip():52] Saving list of pip packages installed into the current environment
+2023-09-09 01:23:30,804 DEBUG   HandlerThread:289313 [system_info.py:_save_pip():68] Saving pip packages done
+2023-09-09 01:23:30,804 DEBUG   HandlerThread:289313 [system_info.py:_save_conda():75] Saving list of conda packages installed into the current environment
+2023-09-09 01:23:31,616 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_created():271] file/dir created: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/requirements.txt
+2023-09-09 01:23:31,616 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_created():271] file/dir created: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/conda-environment.yaml
+2023-09-09 01:23:33,547 DEBUG   HandlerThread:289313 [system_info.py:_save_conda():87] Saving conda packages done
+2023-09-09 01:23:33,549 INFO    HandlerThread:289313 [system_monitor.py:probe():216] Finished publishing system info
+2023-09-09 01:23:33,551 DEBUG   SenderThread:289313 [sender.py:send():379] send: files
+2023-09-09 01:23:33,551 INFO    SenderThread:289313 [sender.py:_save_file():1375] saving file wandb-metadata.json with policy now
+2023-09-09 01:23:33,554 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: stop_status
+2023-09-09 01:23:33,555 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: stop_status
+2023-09-09 01:23:33,556 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: internal_messages
+2023-09-09 01:23:33,615 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/conda-environment.yaml
+2023-09-09 01:23:33,616 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_created():271] file/dir created: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/wandb-metadata.json
+2023-09-09 01:23:34,275 DEBUG   SenderThread:289313 [sender.py:send():379] send: telemetry
+2023-09-09 01:23:34,612 INFO    wandb-upload_0:289313 [upload_job.py:push():131] Uploaded file /tmp/tmpy0hx1ps_wandb/v9cvnc5v-wandb-metadata.json
+2023-09-09 01:23:35,275 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:23:40,276 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:23:45,277 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:23:47,619 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_created():271] file/dir created: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:23:48,554 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: stop_status
+2023-09-09 01:23:48,555 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: stop_status
+2023-09-09 01:23:48,556 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: internal_messages
+2023-09-09 01:23:49,619 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:23:50,336 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:23:51,620 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:23:53,621 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:23:55,535 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:23:55,625 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:23:57,622 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:23:59,622 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:24:00,749 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:24:01,624 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/config.yaml
+2023-09-09 01:24:01,625 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:24:02,363 DEBUG   SenderThread:289313 [sender.py:send():379] send: exit
+2023-09-09 01:24:02,363 INFO    SenderThread:289313 [sender.py:send_exit():584] handling exit code: 1
+2023-09-09 01:24:02,364 INFO    SenderThread:289313 [sender.py:send_exit():586] handling runtime: 31
+2023-09-09 01:24:02,364 INFO    SenderThread:289313 [sender.py:_save_file():1375] saving file wandb-summary.json with policy end
+2023-09-09 01:24:02,364 INFO    SenderThread:289313 [sender.py:send_exit():592] send defer
+2023-09-09 01:24:02,365 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:02,365 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 0
+2023-09-09 01:24:02,365 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:02,365 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 0
+2023-09-09 01:24:02,365 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 1
+2023-09-09 01:24:02,365 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:02,365 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 1
+2023-09-09 01:24:02,366 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:02,366 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 1
+2023-09-09 01:24:02,366 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 2
+2023-09-09 01:24:02,366 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:02,366 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 2
+2023-09-09 01:24:02,366 INFO    HandlerThread:289313 [system_monitor.py:finish():190] Stopping system monitor
+2023-09-09 01:24:02,367 INFO    HandlerThread:289313 [interfaces.py:finish():202] Joined cpu monitor
+2023-09-09 01:24:02,367 INFO    HandlerThread:289313 [interfaces.py:finish():202] Joined disk monitor
+2023-09-09 01:24:02,367 DEBUG   SystemMonitor:289313 [system_monitor.py:_start():159] Starting system metrics aggregation loop
+2023-09-09 01:24:02,368 DEBUG   SystemMonitor:289313 [system_monitor.py:_start():166] Finished system metrics aggregation loop
+2023-09-09 01:24:02,368 DEBUG   SystemMonitor:289313 [system_monitor.py:_start():170] Publishing last batch of metrics
+2023-09-09 01:24:02,624 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_created():271] file/dir created: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/wandb-summary.json
+2023-09-09 01:24:03,625 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:24:04,513 INFO    HandlerThread:289313 [interfaces.py:finish():202] Joined gpu monitor
+2023-09-09 01:24:04,514 INFO    HandlerThread:289313 [interfaces.py:finish():202] Joined memory monitor
+2023-09-09 01:24:04,514 INFO    HandlerThread:289313 [interfaces.py:finish():202] Joined network monitor
+2023-09-09 01:24:04,514 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: poll_exit
+2023-09-09 01:24:04,515 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,515 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 2
+2023-09-09 01:24:04,515 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 3
+2023-09-09 01:24:04,515 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,515 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 3
+2023-09-09 01:24:04,516 DEBUG   SenderThread:289313 [sender.py:send():379] send: stats
+2023-09-09 01:24:04,518 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: poll_exit
+2023-09-09 01:24:04,518 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,518 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 3
+2023-09-09 01:24:04,518 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 4
+2023-09-09 01:24:04,518 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,518 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 4
+2023-09-09 01:24:04,519 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,519 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 4
+2023-09-09 01:24:04,519 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 5
+2023-09-09 01:24:04,519 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,519 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 5
+2023-09-09 01:24:04,519 DEBUG   SenderThread:289313 [sender.py:send():379] send: summary
+2023-09-09 01:24:04,519 INFO    SenderThread:289313 [sender.py:_save_file():1375] saving file wandb-summary.json with policy end
+2023-09-09 01:24:04,519 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,519 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 5
+2023-09-09 01:24:04,519 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 6
+2023-09-09 01:24:04,519 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,520 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 6
+2023-09-09 01:24:04,520 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,520 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 6
+2023-09-09 01:24:04,520 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 7
+2023-09-09 01:24:04,520 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: status_report
+2023-09-09 01:24:04,520 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,520 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 7
+2023-09-09 01:24:04,520 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,520 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 7
+2023-09-09 01:24:04,625 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/wandb-summary.json
+2023-09-09 01:24:04,782 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 8
+2023-09-09 01:24:04,782 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,782 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 8
+2023-09-09 01:24:04,782 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:04,782 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 8
+2023-09-09 01:24:04,782 INFO    SenderThread:289313 [job_builder.py:build():281] Attempting to build job artifact
+2023-09-09 01:24:04,783 INFO    SenderThread:289313 [job_builder.py:_get_source_type():393] is repo sourced job
+2023-09-09 01:24:04,784 INFO    SenderThread:289313 [job_builder.py:build():369] adding wandb-job metadata file
+2023-09-09 01:24:04,786 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 9
+2023-09-09 01:24:04,787 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:04,787 DEBUG   SenderThread:289313 [sender.py:send():379] send: artifact
+2023-09-09 01:24:04,787 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 9
+2023-09-09 01:24:05,625 INFO    Thread-12 :289313 [dir_watcher.py:_on_file_modified():288] file/dir modified: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:24:06,345 INFO    SenderThread:289313 [sender.py:send_artifact():1453] sent artifact job-git_github.com_nlokeshiisc_dataset-interfaces.git_notebooks_Extract_Better_Embeds.py - {'id': 'QXJ0aWZhY3Q6NTYyNzIxMDU0', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjk2MDE3MDIz', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NTYyNzIxMDU0', 'versionIndex': 0}}}
+2023-09-09 01:24:06,346 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:06,346 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 9
+2023-09-09 01:24:06,346 INFO    SenderThread:289313 [dir_watcher.py:finish():358] shutting down directory watcher
+2023-09-09 01:24:06,626 INFO    SenderThread:289313 [dir_watcher.py:finish():388] scan: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files
+2023-09-09 01:24:06,626 INFO    SenderThread:289313 [dir_watcher.py:finish():402] scan save: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/wandb-metadata.json wandb-metadata.json
+2023-09-09 01:24:06,626 INFO    SenderThread:289313 [dir_watcher.py:finish():402] scan save: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/config.yaml config.yaml
+2023-09-09 01:24:06,626 INFO    SenderThread:289313 [dir_watcher.py:finish():402] scan save: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/requirements.txt requirements.txt
+2023-09-09 01:24:06,626 INFO    SenderThread:289313 [dir_watcher.py:finish():402] scan save: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/wandb-summary.json wandb-summary.json
+2023-09-09 01:24:06,626 INFO    SenderThread:289313 [dir_watcher.py:finish():402] scan save: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/conda-environment.yaml conda-environment.yaml
+2023-09-09 01:24:06,628 INFO    SenderThread:289313 [dir_watcher.py:finish():402] scan save: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log output.log
+2023-09-09 01:24:06,628 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 10
+2023-09-09 01:24:06,629 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:06,633 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 10
+2023-09-09 01:24:06,637 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:06,637 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 10
+2023-09-09 01:24:06,637 INFO    SenderThread:289313 [file_pusher.py:finish():175] shutting down file pusher
+2023-09-09 01:24:07,327 INFO    wandb-upload_1:289313 [upload_job.py:push():131] Uploaded file /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/requirements.txt
+2023-09-09 01:24:07,396 INFO    wandb-upload_0:289313 [upload_job.py:push():131] Uploaded file /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/config.yaml
+2023-09-09 01:24:07,509 INFO    wandb-upload_4:289313 [upload_job.py:push():131] Uploaded file /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/output.log
+2023-09-09 01:24:08,365 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: keepalive
+2023-09-09 01:24:08,596 INFO    wandb-upload_3:289313 [upload_job.py:push():131] Uploaded file /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/conda-environment.yaml
+2023-09-09 01:24:08,619 INFO    wandb-upload_2:289313 [upload_job.py:push():131] Uploaded file /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/files/wandb-summary.json
+2023-09-09 01:24:08,820 INFO    Thread-11 (_thread_body):289313 [sender.py:transition_state():612] send defer: 11
+2023-09-09 01:24:08,820 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:08,820 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 11
+2023-09-09 01:24:08,821 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:08,821 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 11
+2023-09-09 01:24:08,821 INFO    SenderThread:289313 [file_pusher.py:join():181] waiting for file pusher
+2023-09-09 01:24:08,821 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 12
+2023-09-09 01:24:08,821 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:08,821 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 12
+2023-09-09 01:24:08,821 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:08,821 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 12
+2023-09-09 01:24:08,821 INFO    SenderThread:289313 [file_stream.py:finish():594] file stream finish called
+2023-09-09 01:24:09,161 INFO    SenderThread:289313 [file_stream.py:finish():598] file stream finish is done
+2023-09-09 01:24:09,161 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 13
+2023-09-09 01:24:09,161 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:09,161 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 13
+2023-09-09 01:24:09,162 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:09,162 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 13
+2023-09-09 01:24:09,162 INFO    SenderThread:289313 [sender.py:transition_state():612] send defer: 14
+2023-09-09 01:24:09,162 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: defer
+2023-09-09 01:24:09,162 INFO    HandlerThread:289313 [handler.py:handle_request_defer():170] handle defer: 14
+2023-09-09 01:24:09,162 DEBUG   SenderThread:289313 [sender.py:send():379] send: final
+2023-09-09 01:24:09,162 DEBUG   SenderThread:289313 [sender.py:send():379] send: footer
+2023-09-09 01:24:09,162 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: defer
+2023-09-09 01:24:09,162 INFO    SenderThread:289313 [sender.py:send_request_defer():608] handle sender defer: 14
+2023-09-09 01:24:09,163 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: poll_exit
+2023-09-09 01:24:09,163 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: server_info
+2023-09-09 01:24:09,163 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: poll_exit
+2023-09-09 01:24:09,163 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: server_info
+2023-09-09 01:24:09,165 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: get_summary
+2023-09-09 01:24:09,165 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: sampled_history
+2023-09-09 01:24:09,166 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: internal_messages
+2023-09-09 01:24:09,166 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: job_info
+2023-09-09 01:24:09,454 DEBUG   SenderThread:289313 [sender.py:send_request():406] send_request: job_info
+2023-09-09 01:24:09,454 INFO    MainThread:289313 [wandb_run.py:_footer_history_summary_info():3557] rendering history
+2023-09-09 01:24:09,455 INFO    MainThread:289313 [wandb_run.py:_footer_history_summary_info():3589] rendering summary
+2023-09-09 01:24:09,455 INFO    MainThread:289313 [wandb_run.py:_footer_sync_info():3516] logging synced files
+2023-09-09 01:24:09,455 DEBUG   HandlerThread:289313 [handler.py:handle_request():144] handle_request: shutdown
+2023-09-09 01:24:09,455 INFO    HandlerThread:289313 [handler.py:finish():840] shutting down handler
+2023-09-09 01:24:10,166 INFO    WriterThread:289313 [datastore.py:close():294] close: /raid/infolab/nlokesh/dataset-interfaces/notebooks/wandb/run-20230909_012329-qvt13qxg/run-qvt13qxg.wandb
+2023-09-09 01:24:10,454 INFO    SenderThread:289313 [sender.py:finish():1531] shutting down sender
+2023-09-09 01:24:10,454 INFO    SenderThread:289313 [file_pusher.py:finish():175] shutting down file pusher
+2023-09-09 01:24:10,455 INFO    SenderThread:289313 [file_pusher.py:join():181] waiting for file pusher

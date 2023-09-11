@@ -1,0 +1,13 @@
+vae/diffusion_pytorch_model.safetensors not found
+Loading pipeline components...: 100%|███████████████████████████████████████████████████████████████████████████████████| 5/5 [00:00<00:00,  6.96it/s]
+Loading pipeline components...:  80%|██████████████████████████████████████████████████████████████████▍                | 4/5 [00:00<00:00,  4.99it/s]
+
+
+
+
+Traceback (most recent call last):████████████████████████████████████████████████████████████████████████████████████| 50/50 [00:07<00:00,  6.27it/s]
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/Extract_Better_Embeds.py", line 134, in <module>
+    embeds = run_textual_inversion_plus(
+  File "/raid/infolab/nlokesh/dataset-interfaces/notebooks/../dataset_interfaces/textual_inversion.py", line 1105, in run_textual_inversion_plus
+    losses[z_idx]["loss"] = loss.cpu()
+KeyError: 476
